@@ -1,0 +1,7 @@
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Kvizkoteka\bin\Debug\Kvizkoteka.exe.config
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Kvizkoteka\bin\Debug\Kvizkoteka.exe
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Kvizkoteka\bin\Debug\Kvizkoteka.pdb
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Kvizkoteka\obj\Debug\Kvizkoteka.csproj.AssemblyReference.cache
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Kvizkoteka\obj\Debug\Kvizkoteka.csproj.CoreCompileInputs.cache
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Kvizkoteka\obj\Debug\Kvizkoteka.exe
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Kvizkoteka\obj\Debug\Kvizkoteka.pdb

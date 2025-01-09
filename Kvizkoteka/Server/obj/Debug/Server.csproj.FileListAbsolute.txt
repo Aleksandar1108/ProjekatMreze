@@ -1,0 +1,11 @@
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Server.exe.config
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Server.exe
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Server.pdb
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Kvizkoteka.exe
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Kvizkoteka.pdb
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Kvizkoteka.exe.config
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.csproj.AssemblyReference.cache
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.csproj.CoreCompileInputs.cache
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.csproj.Up2Date
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.exe
+C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.pdb
