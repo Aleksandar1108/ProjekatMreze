@@ -9,3 +9,14 @@ C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Klijent\bin\Debug\Kviz
 C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Klijent\bin\Debug\Kvizkoteka.pdb
 C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Klijent\bin\Debug\Kvizkoteka.exe.config
 C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Klijent\obj\Debug\Klijent.csproj.Up2Date
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Klijent\bin\Debug\Klijent.exe.config
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Klijent\bin\Debug\Klijent.exe
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Klijent\bin\Debug\Klijent.pdb
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Klijent\bin\Debug\Kvizkoteka.exe
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Klijent\bin\Debug\Kvizkoteka.pdb
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Klijent\bin\Debug\Kvizkoteka.exe.config
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Klijent\obj\Debug\Klijent.csproj.AssemblyReference.cache
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Klijent\obj\Debug\Klijent.csproj.CoreCompileInputs.cache
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Klijent\obj\Debug\Klijent.csproj.Up2Date
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Klijent\obj\Debug\Klijent.exe
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Klijent\obj\Debug\Klijent.pdb

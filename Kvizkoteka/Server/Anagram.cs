@@ -71,8 +71,61 @@ namespace Server
         
         public int IzracunajPoene()
         {
-            
-            return RecOdKojeSePraviAnagram.Replace(" ", "").Length;
+
+            // return RecOdKojeSePraviAnagram.Replace(" ", "").Length;
+
+            var originalWords = RecOdKojeSePraviAnagram.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var predlozeniWords = PredloženAnagram.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            int totalPoints = 0;
+
+            // Prolazak kroz sve originalne reči
+            for (int i = 0; i < originalWords.Length; i++)
+            {
+                // Ako nema dovoljno predloženih reči, prekidamo dalju obradu
+                if (i >= predlozeniWords.Length) break;
+
+                var originalWord = originalWords[i];
+                var predlozenaWord = predlozeniWords[i];
+
+                // Proveri da li je predložena reč tačan anagram originalne reči
+                if (IsWordAnagram(originalWord, predlozenaWord))
+                {
+                    // Ako je tačna, dodaj poene jednako broju slova
+                    totalPoints += originalWord.Length;
+                }
+                // Inače, ne dodajemo poene (automatski ostaje 0)
+            }
+
+            return totalPoints;
+        }
+
+        private bool IsWordAnagram(string originalWord, string predlozenaWord)
+        {
+            // Ako dužine nisu iste, automatski nisu anagrami
+            if (originalWord.Length != predlozenaWord.Length) return false;
+
+            // Kreiraj frekvencijski brojnik za karaktere u originalnoj reči
+            var charCount = new Dictionary<char, int>();
+
+            foreach (var c in originalWord)
+            {
+                if (charCount.ContainsKey(c))
+                    charCount[c]++;
+                else
+                    charCount[c] = 1;
+            }
+
+            // Proveri karaktere predložene reči protiv originalne
+            foreach (var c in predlozenaWord)
+            {
+                if (!charCount.ContainsKey(c) || charCount[c] == 0)
+                    return false; // Slovo ne postoji ili je višak
+                charCount[c]--;
+            }
+
+            // Ako svi karakteri odgovaraju, reči su anagrami
+            return true;
         }
     }
 }

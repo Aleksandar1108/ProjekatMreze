@@ -1,18 +1,18 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\",
+  "WorkspaceRootPath": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|c:\\users\\windows 10\\source\\repos\\projekatmreze\\kvizkoteka\\server\\anagram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|c:\\users\\milos jovanovic\\source\\repos\\projekatmreze\\kvizkoteka\\server\\anagram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\anagram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|c:\\users\\windows 10\\source\\repos\\projekatmreze\\kvizkoteka\\klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|solutionrelative:klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|c:\\users\\windows 10\\source\\repos\\projekatmreze\\kvizkoteka\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|solutionrelative:klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,26 +34,26 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
               "RelativeDocumentMoniker": "Server\\Program.cs",
-              "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
+              "ToolTip": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
               "RelativeToolTip": "Server\\Program.cs",
-              "ViewState": "AQIAALMAAAAAAAAAAAAcwMgAAAAAAAAA",
+              "ViewState": "AQIAAKcAAAAAAAAAAAAwwMgAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-11T15:41:56.093Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Klijent\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Klijent\\Program.cs",
               "RelativeDocumentMoniker": "Klijent\\Program.cs",
-              "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Klijent\\Program.cs",
+              "ToolTip": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Klijent\\Program.cs",
               "RelativeToolTip": "Klijent\\Program.cs",
-              "ViewState": "AQIAAC8AAAAAAAAAAAAiwEcAAAAqAAAA",
+              "ViewState": "AQIAAA0AAAAAAAAAAAA1wEcAAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-11T15:40:20.908Z",
               "EditorCaption": ""
@@ -62,11 +62,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Anagram.cs",
-              "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Anagram.cs",
+              "DocumentMoniker": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Anagram.cs",
               "RelativeDocumentMoniker": "Server\\Anagram.cs",
-              "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Anagram.cs",
+              "ToolTip": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Anagram.cs",
               "RelativeToolTip": "Server\\Anagram.cs",
-              "ViewState": "AQIAACIAAAAAAAAAAAAiwDgAAAA0AAAA",
+              "ViewState": "AQIAAFsAAAAAAAAAAAAwwIAAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-10T20:07:54.125Z",
               "EditorCaption": ""

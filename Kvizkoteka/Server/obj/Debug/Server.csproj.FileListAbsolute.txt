@@ -9,3 +9,14 @@ C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Serve
 C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.csproj.Up2Date
 C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.exe
 C:\Users\Windows 10\source\repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.pdb
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Server.exe.config
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Server.exe
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Server.pdb
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Kvizkoteka.exe
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Kvizkoteka.pdb
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Server\bin\Debug\Kvizkoteka.exe.config
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.csproj.AssemblyReference.cache
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.csproj.CoreCompileInputs.cache
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.csproj.Up2Date
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.exe
+C:\Users\Milos Jovanovic\Source\Repos\ProjekatMreze\Kvizkoteka\Server\obj\Debug\Server.pdb
