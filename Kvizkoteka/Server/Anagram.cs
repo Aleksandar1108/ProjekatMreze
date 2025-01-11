@@ -9,17 +9,17 @@ namespace Server
 {
     public  class Anagram
     {
-        public string RecOdKojeSePraviAnagram { get; set; } // Originalna reč
-        public string PredloženAnagram { get; set; } // Predloženi anagram od strane igrača
+        public string RecOdKojeSePraviAnagram { get; set; } 
+        public string PredloženAnagram { get; set; } 
 
-        // Metoda za učitavanje reči iz tekstualne datoteke
+        
         public void UcitajRec(string fileName)
         {
             try
             {
                 var lines = File.ReadAllLines(fileName);
                 var random = new Random();
-                // Učitavamo nasumičnu liniju iz fajla
+                
                 RecOdKojeSePraviAnagram = lines[random.Next(lines.Length)];
             }
             catch (Exception ex)
@@ -28,30 +28,50 @@ namespace Server
             }
         }
 
-        // Metoda za generisanje pomešanih slova iz originalne reči
+        
         public string GenerisiAnagram()
         {
-            var random = new Random();
-            return new string(RecOdKojeSePraviAnagram.ToCharArray()
-                .OrderBy(c => random.Next())
-                .ToArray());
+            // Podela originalne reci na reci
+            string[] words = RecOdKojeSePraviAnagram.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            Random rand = new Random();
+
+            List<string> scrambledWords = new List<string>();
+
+            foreach (var word in words)
+            {
+                // Pretvaramo svaku rec u karaktere i mesamo te karaktere
+                char[] characters = word.ToCharArray();
+                for (int i = 0; i < characters.Length; i++)
+                {
+                    int j = rand.Next(i, characters.Length); // Random indeks za zamenu
+                    char temp = characters[i];
+                    characters[i] = characters[j];
+                    characters[j] = temp;
+                }
+
+              
+                scrambledWords.Add(new string(characters));
+            }
+
+            // Spajamo pomesane reci kao u jednu recenicu
+            return string.Join(" ", scrambledWords);
         }
 
-        // Metoda koja proverava da li je predloženi anagram validan
+        
         public bool ProveriAnagram()
         {
-            // Sortiramo originalnu reč i predloženi anagram
+            
             var originalSorted = string.Concat(RecOdKojeSePraviAnagram.OrderBy(c => c));
             var predlozenSorted = string.Concat(PredloženAnagram.OrderBy(c => c));
 
-            // Ako su isti, anagram je tačan
+            
             return originalSorted == predlozenSorted;
         }
 
-        // Metoda za računanje broja poena (broj slova u originalnom tekstu)
+        
         public int IzracunajPoene()
         {
-            // Broji ukupno slova u originalnom tekstu (ignorise praznine)
+            
             return RecOdKojeSePraviAnagram.Replace(" ", "").Length;
         }
     }

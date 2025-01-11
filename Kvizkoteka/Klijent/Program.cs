@@ -57,10 +57,16 @@ namespace Klijent
                 writer.WriteLine(playerId);
 
                 // Čitanje poruka sa servera
-                Console.WriteLine(reader.ReadLine()); // Dobrodošli poruka
-                Console.WriteLine(reader.ReadLine()); // Pomešana slova
+                Console.WriteLine(reader.ReadLine()); // Dobrodošli
+                Console.WriteLine(reader.ReadLine()); // Unesite START 
 
-                // Unos anagrama
+                string startCommand = Console.ReadLine(); // Unos START
+                writer.WriteLine(startCommand);
+
+                // Čekanje na pomešana slova od servera
+                Console.WriteLine(reader.ReadLine()); 
+
+                
                 Console.Write("Unesite vaš anagram: ");
                 string anagram = Console.ReadLine();
                 writer.WriteLine(anagram);

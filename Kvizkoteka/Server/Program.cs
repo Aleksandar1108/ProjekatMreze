@@ -13,12 +13,12 @@ namespace Server
 {
     internal class Program
     {
-        // Deklaracija atributa
-        private static UdpClient udpListener; // Sluša UDP poruke
-        private static TcpListener tcpListener; // Sluša TCP konekcije
-        private static Dictionary<int, Igrac> igraci; // Skladišti informacije o igračima
-        private static Dictionary<int, List<string>> igrePoIgracima; // Skladišti igre po ID-ovima igrača
-        private static int playerIdCounter = 1; // Brojač ID-a igrača
+       
+        private static UdpClient udpListener; // Slusa UDP poruke
+        private static TcpListener tcpListener; // Slusa TCP konekcije
+        private static Dictionary<int, Igrac> igraci; // Skladisti informacije o igracima
+        private static Dictionary<int, List<string>> igrePoIgracima; // Skladisti igre po ID-ovima igraca
+        private static int playerIdCounter = 1; // Brojac ID-a igraca
         static void Main(string[] args)
         {
             udpListener = new UdpClient(5000);
@@ -78,7 +78,7 @@ namespace Server
                     string gamesList = parts[1].Trim();
                     string[] requestedGames = gamesList.Split(',').Select(g => g.Trim()).ToArray();
 
-                    // Validacija igara
+                    
                     bool validGames = requestedGames.All(g => g == "an" || g == "po" || g == "as");
                     if (!validGames)
                     {
@@ -88,7 +88,7 @@ namespace Server
                         continue;
                     }
 
-                    // Kreiranje igrača i dodavanje u rečnike
+                    
                     Igrac igrac = new Igrac
                     {
                         Id = playerIdCounter++,
@@ -123,40 +123,53 @@ namespace Server
                 Igrac igrac = igraci[playerId];
                 bool isTrainingGame = igrePoIgracima[playerId].Contains("as");
 
+                
                 string welcomeMessage = isTrainingGame
                     ? $"Dobrodošli u trening igru kviza Kviskoteka, današnji takmičar je {igrac.ImeNadimak}"
                     : $"Dobrodošli u igru kviza Kviskoteka, današnji takmičar je {igrac.ImeNadimak}";
 
                 writer.WriteLine(welcomeMessage);
 
-                // Kreiranje igre
-                Anagram game = new Anagram();
-                game.UcitajRec("words.txt"); // Učitavanje reči iz fajla
-                string scrambledWord = game.GenerisiAnagram(); // Pomešana slova
-
-                // Slanje pomešanih slova klijentu
-                writer.WriteLine($"Pomešana slova: {scrambledWord}");
-
-                // Čekanje odgovora od klijenta
                
-                string clientAnagram = reader.ReadLine()?.Trim(); // Čeka unos od klijenta
+                writer.WriteLine("Unesite START da biste započeli igru.");
 
-                if (!string.IsNullOrEmpty(clientAnagram))
+                
+                string startMessage = reader.ReadLine()?.Trim(); // Čeka unos od klijenta(START)
+
+                if (startMessage == "START")
                 {
-                    game.PredloženAnagram = clientAnagram;
-                    if (game.ProveriAnagram())
+                    
+                    Anagram game = new Anagram();
+                    game.UcitajRec("words.txt"); 
+                    string scrambledWord = game.GenerisiAnagram(); 
+
+                    
+                    writer.WriteLine($"Pomešana slova: {scrambledWord}");
+
+                    // Cekamo unos anagrama od klijenta
+                    string clientAnagram = reader.ReadLine()?.Trim(); 
+
+                    if (!string.IsNullOrEmpty(clientAnagram))
                     {
-                        int points = game.IzracunajPoene();
-                        writer.WriteLine($"Tačno! Osvojili ste {points} poena.");
+                        game.PredloženAnagram = clientAnagram;
+                        if (game.ProveriAnagram())
+                        {
+                            int points = game.IzracunajPoene();
+                            writer.WriteLine($"Tačno! Osvojili ste {points} poena.");
+                        }
+                        else
+                        {
+                            writer.WriteLine("Netačno. Pokušajte ponovo.");
+                        }
                     }
                     else
                     {
-                        writer.WriteLine($"Netačno. ");
+                        writer.WriteLine("Niste uneli ništa. Pokušajte ponovo.");
                     }
                 }
                 else
                 {
-                    writer.WriteLine("Niste uneli ništa. Pokušajte ponovo.");
+                    writer.WriteLine("Niste poslali START. Pokušajte ponovo.");
                 }
             }
             catch (IOException ex)
