@@ -138,25 +138,29 @@ namespace Server
 
                 if (startMessage == "START")
                 {
-                    
-                    Anagram game = new Anagram();
-                    game.UcitajRec("words.txt"); 
-                    string scrambledWord = game.GenerisiAnagram(); 
+                    List<string> igreZaIgraca = igrePoIgracima[playerId];
+
+                    // Provera da li je izabrana igra "an" (Anagram)
+                    if (igreZaIgraca.Contains("an"))
+                    { 
+                         Anagram game = new Anagram();
+                        game.UcitajRec("words.txt"); 
+                         string scrambledWord = game.GenerisiAnagram(); 
 
                     
-                    writer.WriteLine($"Pomešana slova: {scrambledWord}");
+                         writer.WriteLine($"Pomešana slova: {scrambledWord}");
 
-                    // Cekamo unos anagrama od klijenta
-                    string clientAnagram = reader.ReadLine()?.Trim(); 
+                         // Cekamo unos anagrama od klijenta
+                        string clientAnagram = reader.ReadLine()?.Trim(); 
 
-                    if (!string.IsNullOrEmpty(clientAnagram))
-                    {
-                        game.PredloženAnagram = clientAnagram;
-                        if (game.ProveriAnagram())
+                        if (!string.IsNullOrEmpty(clientAnagram))
                         {
-                            int points = game.IzracunajPoene();
-                            writer.WriteLine($"Tačno! Osvojili ste {points} poena.");
-                        }
+                            game.PredloženAnagram = clientAnagram;
+                            if (game.ProveriAnagram())
+                            {
+                             int points = game.IzracunajPoene();
+                             writer.WriteLine($"Tačno! Osvojili ste {points} poena.");
+                             }
                         else
                         {
                             writer.WriteLine("Netačno. Pokušajte ponovo.");
@@ -171,6 +175,9 @@ namespace Server
                 {
                     writer.WriteLine("Niste poslali START. Pokušajte ponovo.");
                 }
+                    }
+
+                       
             }
             catch (IOException ex)
             {
