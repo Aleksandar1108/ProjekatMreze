@@ -11,7 +11,7 @@ using System.IO;
 
 namespace Server
 {
-    internal class Program
+    public class Program
     {
         private static Socket udpSocket; // UDP socket
         private static Socket tcpSocket; // TCP socket
@@ -132,6 +132,7 @@ namespace Server
                 if (startMessage == "START")
                 {
                     List<string> igreZaIgraca = igrePoIgracima[playerId];
+                    int totalPoints = 0;
 
                     if (igreZaIgraca.Contains("an"))
                     {
@@ -148,6 +149,7 @@ namespace Server
                             if (game.ProveriAnagram())
                             {
                                 int points = game.IzracunajPoene();
+                                totalPoints += points;
                                 writer.WriteLine($"Tačno! Osvojili ste {points} poena.");
                             }
                             else
@@ -159,6 +161,52 @@ namespace Server
                     else
                     {
                         writer.WriteLine("Niste uneli ništa. Pokušajte ponovo.");
+                    }
+
+                    if (igreZaIgraca.Contains("po"))
+                    {
+                        PitanjaIOdgovori game = new PitanjaIOdgovori();
+                        game.UcitajPitanja();
+                        List<bool> prethodniOdgovori = new List<bool>();
+
+                        for (int i = 0; i < 10; i++)
+                        {
+                            if (!game.PostaviPitanje(prethodniOdgovori))
+                            {
+                                writer.WriteLine("Nema više pitanja.");
+                                break;
+                            }
+
+                            writer.WriteLine($"Pitanje {i + 1}: {game.TekucePitanje}");
+                            writer.WriteLine("a) Tacno");
+                            writer.WriteLine("b) Netacno");
+
+                            string clientAnswer = reader.ReadLine()?.Trim().ToLower();
+
+                            if (clientAnswer == "a" || clientAnswer == "b")
+                            {
+                                int points = game.ProveriOdgovor(clientAnswer);
+                                totalPoints += points;
+                                writer.WriteLine($"Trenutni broj poena: {totalPoints}");
+
+                                if (points > 0)
+                                {
+                                    writer.WriteLine("Tacno! Osvojili ste 4 poena.");
+                                }
+                                else
+                                {
+                                    writer.WriteLine("Netačno. Pokušajte ponovo.");
+                                }
+
+                                prethodniOdgovori.Add(points > 0);
+                            }
+                            else
+                            {
+                                writer.WriteLine("Neispravan odgovor. Pokušajte sa 'a' ili 'b'.");
+                            }
+                        }
+
+                        writer.WriteLine($"Ukupno poena: {totalPoints}");
                     }
                 }
                 else

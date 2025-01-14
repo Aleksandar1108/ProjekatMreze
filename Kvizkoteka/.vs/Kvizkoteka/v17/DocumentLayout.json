@@ -1,21 +1,21 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\",
+  "WorkspaceRootPath": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|solutionrelative:klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|c:\\users\\windows 10\\source\\repos\\projekatmreze\\kvizkoteka\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{05F823B6-7142-4B3F-8049-1FC6C2D92370}|Kvizkoteka\\Kvizkoteka.csproj|c:\\users\\windows 10\\source\\repos\\projekatmreze\\kvizkoteka\\kvizkoteka\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{05F823B6-7142-4B3F-8049-1FC6C2D92370}|Kvizkoteka\\Kvizkoteka.csproj|solutionrelative:kvizkoteka\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|c:\\users\\milos jovanovic\\source\\repos\\projekatmreze\\kvizkoteka\\server\\pitanjaiodgovori.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\pitanjaiodgovori.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\server\\anagram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|c:\\users\\milos jovanovic\\source\\repos\\projekatmreze\\kvizkoteka\\klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|solutionrelative:klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\server\\anagram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\anagram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -26,8 +26,22 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
+              "RelativeDocumentMoniker": "Server\\Program.cs",
+              "ToolTip": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
+              "RelativeToolTip": "Server\\Program.cs",
+              "ViewState": "AQIAAMoAAAAAAAAAAAAowO8AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-11T15:41:56.093Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
@@ -38,39 +52,26 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PitanjaIOdgovori.cs",
+              "DocumentMoniker": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\PitanjaIOdgovori.cs",
+              "RelativeDocumentMoniker": "Server\\PitanjaIOdgovori.cs",
+              "ToolTip": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\PitanjaIOdgovori.cs",
+              "RelativeToolTip": "Server\\PitanjaIOdgovori.cs",
+              "ViewState": "AQIAAB4AAAAAAAAAAAAAACQAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T14:26:50.889Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Kvizkoteka\\Program.cs",
-              "RelativeDocumentMoniker": "Kvizkoteka\\Program.cs",
-              "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Kvizkoteka\\Program.cs",
-              "RelativeToolTip": "Kvizkoteka\\Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAaAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-14T12:44:37.686Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
-              "RelativeDocumentMoniker": "Server\\Program.cs",
-              "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
-              "RelativeToolTip": "Server\\Program.cs",
-              "ViewState": "AQIAAIAAAAAAAAAAAAAgwIwAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-11T15:41:56.093Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Klijent\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Klijent\\Program.cs",
               "RelativeDocumentMoniker": "Klijent\\Program.cs",
-              "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Klijent\\Program.cs",
+              "ToolTip": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Klijent\\Program.cs",
               "RelativeToolTip": "Klijent\\Program.cs",
-              "ViewState": "AQIAADsAAAAAAAAAAAAUwEMAAAA9AAAA",
+              "ViewState": "AQIAAEQAAAAAAAAAAAAowFkAAAAaAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-11T15:40:20.908Z",
               "EditorCaption": ""
@@ -79,13 +80,14 @@
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "Anagram.cs",
-              "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Anagram.cs",
+              "DocumentMoniker": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Anagram.cs",
               "RelativeDocumentMoniker": "Server\\Anagram.cs",
-              "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Anagram.cs",
+              "ToolTip": "C:\\Users\\Milos Jovanovic\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Anagram.cs",
               "RelativeToolTip": "Server\\Anagram.cs",
-              "ViewState": "AQIAAD4AAAAAAAAAAAAswFgAAAAwAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAGUAAAArAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-10T20:07:54.125Z"
+              "WhenOpened": "2025-01-10T20:07:54.125Z",
+              "EditorCaption": ""
             }
           ]
         }

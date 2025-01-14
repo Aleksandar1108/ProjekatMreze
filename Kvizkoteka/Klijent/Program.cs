@@ -75,6 +75,46 @@ namespace Klijent
                         // Prikazivanje rezultata
                         string result = reader.ReadLine();
                         Console.WriteLine("Odgovor servera: " + result);
+
+                        int totalPoints = 0;
+
+                        // Ako je igra "Pitanja i odgovori", čeka pitanja i odgovara
+                        Console.WriteLine("Odgovorite na sledeće pitanje: ");
+                        for (int i = 0; i < 10; i++) // Postavljanje 10 pitanja
+                        {
+                            string pitanje = reader.ReadLine(); // Pitanje od servera
+                            if (pitanje == "Nema više pitanja.") break;
+
+                            // Prikazivanje pitanja i opcija
+                            Console.WriteLine(pitanje); // Ispisivanje pitanja
+                            Console.WriteLine("a) Tačno");
+                            Console.WriteLine("b) Netačno");
+
+                            string odgovor = Console.ReadLine(); // Unos odgovora (A ili B)
+                            writer.WriteLine(odgovor);
+
+                            // Čitanje rezultata od servera
+                            string odgovorServera = reader.ReadLine();
+                            Console.WriteLine(odgovorServera);
+
+                            // Ako je odgovor tačan, dodaj 4 poena
+                            if (odgovorServera.Contains("Tačno"))
+                            {
+                                totalPoints += 4; // Dodaj 4 poena za tačan odgovor
+                            }
+                            else
+                            {
+                                // Ako nije tačno, poeni ostaju isti
+                                Console.WriteLine("Odgovor je netačan. Poeni ostaju isti.");
+                            }
+
+                            // Prikazivanje trenutnih bodova
+                            Console.WriteLine($"Trenutni broj poena: {totalPoints}");
+                            Console.WriteLine(); // Prazna linija za lepu separaciju između pitanja
+                        }
+
+                        // Prikazivanje ukupnog broja poena
+                        Console.WriteLine($"Ukupno poena: {totalPoints}");
                     }
                     else
                     {

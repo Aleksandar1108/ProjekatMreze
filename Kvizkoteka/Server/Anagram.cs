@@ -68,37 +68,28 @@ namespace Server
             return originalSorted == predlozenSorted;
         }
 
-        
+
         public int IzracunajPoene()
         {
+            // Uklanjanje praznina iz originalne i predložene reči
+            string originalNoSpaces = RecOdKojeSePraviAnagram.Replace(" ", "").ToLower();
+            string predlozenNoSpaces = PredloženAnagram.Replace(" ", "").ToLower();
 
-            // return RecOdKojeSePraviAnagram.Replace(" ", "").Length;
+            // Sortiranje karaktera za proveru anagrama
+            var originalSorted = string.Concat(originalNoSpaces.OrderBy(c => c));
+            var predlozenSorted = string.Concat(predlozenNoSpaces.OrderBy(c => c));
 
-            var originalWords = RecOdKojeSePraviAnagram.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            var predlozeniWords = PredloženAnagram.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-
-            int totalPoints = 0;
-
-            // Prolazak kroz sve originalne reči
-            for (int i = 0; i < originalWords.Length; i++)
+            // Provera da li su ceo original i predloženi anagram identični
+            if (originalSorted == predlozenSorted)
             {
-                // Ako nema dovoljno predloženih reči, prekidamo dalju obradu
-                if (i >= predlozeniWords.Length) break;
-
-                var originalWord = originalWords[i];
-                var predlozenaWord = predlozeniWords[i];
-
-                // Proveri da li je predložena reč tačan anagram originalne reči
-                if (IsWordAnagram(originalWord, predlozenaWord))
-                {
-                    // Ako je tačna, dodaj poene jednako broju slova
-                    totalPoints += originalWord.Length;
-                }
-                // Inače, ne dodajemo poene (automatski ostaje 0)
+                // Ako je tačan, dodeli bodove na osnovu broja slova u originalnoj reči bez razmaka
+                return originalNoSpaces.Length;
             }
 
-            return totalPoints;
+            // Ako nije tačan, nema bodova
+            return 0;
         }
+
 
         private bool IsWordAnagram(string originalWord, string predlozenaWord)
         {
