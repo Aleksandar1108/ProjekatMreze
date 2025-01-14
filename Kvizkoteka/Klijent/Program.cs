@@ -1,30 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 
 namespace Klijent
 {
     public class Program
     {
-        public void SendAnagram(string anagram, NetworkStream stream)
+        public static void Main(string[] args)
         {
-            byte[] anagramBytes = Encoding.ASCII.GetBytes(anagram);
-            stream.Write(anagramBytes, 0, anagramBytes.Length);
-
-            // Čekanje na odgovor
-            byte[] buffer = new byte[1024];
-            int bytesRead = stream.Read(buffer, 0, buffer.Length);
-            string response = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-            Console.WriteLine("Odgovor servera: " + response);
-        }
-        static void Main(string[] args)
-        {
-
+            // Unos imena/nadimka i igara
             Console.Write("Unesite ime/nadimak: ");
             string ime = Console.ReadLine();
 
@@ -35,47 +21,75 @@ namespace Klijent
             UdpClient udpClient = new UdpClient();
             IPEndPoint serverEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
             string prijava = $"PRIJAVA: {ime}, {igre}";
+
+            // Slanje prijave serveru
             udpClient.Send(Encoding.UTF8.GetBytes(prijava), prijava.Length, serverEndpoint);
 
+            // Prijem odgovora sa servera
             string udpResponse = Encoding.UTF8.GetString(udpClient.Receive(ref serverEndpoint));
             Console.WriteLine("Odgovor servera: " + udpResponse);
 
-            // TCP deo
+            // Obrada TCP informacija
             if (udpResponse.StartsWith("TCP INFO:"))
             {
-                string[] tcpInfo = udpResponse.Substring(10).Split(':');
-                string ip = tcpInfo[0];
-                int port = int.Parse(tcpInfo[1]);
+                try
+                {
+                    string[] tcpInfo = udpResponse.Substring(10).Split(':'); // Split na IP i port
 
-                 TcpClient tcpClient = new TcpClient(ip, port);
-                 NetworkStream stream = tcpClient.GetStream();
-                 StreamReader reader = new StreamReader(stream);
-                 StreamWriter writer = new StreamWriter(stream) { AutoFlush = true };
+                    if (tcpInfo.Length == 2)
+                    {
+                        string ip = tcpInfo[0];
+                        int port = int.Parse(tcpInfo[1]);
 
-                Console.Write("Unesite vaš ID (broj koji vam je dodeljen od servera): ");
-                string playerId = Console.ReadLine();
-                writer.WriteLine(playerId);
+                        // Povezivanje na TCP server
+                        TcpClient tcpClient = new TcpClient(ip, port);
+                        NetworkStream stream = tcpClient.GetStream();
+                        StreamReader reader = new StreamReader(stream);
+                        StreamWriter writer = new StreamWriter(stream) { AutoFlush = true };
 
-                // Čitanje poruka sa servera
-                Console.WriteLine(reader.ReadLine()); // Dobrodošli
-                Console.WriteLine(reader.ReadLine()); // Unesite START 
+                        Console.Write("Unesite vaš ID (broj koji vam je dodeljen od servera): ");
+                        string playerId = Console.ReadLine();
+                        writer.WriteLine(playerId);
 
-                string startCommand = Console.ReadLine(); // Unos START
-                writer.WriteLine(startCommand);
+                        // Čitanje dobrodošlice sa servera
+                        string welcomeMessage = reader.ReadLine();
+                        Console.WriteLine(welcomeMessage); // Dobrodošli poruka
 
-                // Čekanje na pomešana slova od servera
-                Console.WriteLine(reader.ReadLine()); 
+                        // Čitanje poruke za unos komande
+                        string startPrompt = reader.ReadLine();
+                        Console.WriteLine(startPrompt); // Unesite START poruka
 
-                
-                Console.Write("Unesite vaš anagram: ");
-                string anagram = Console.ReadLine();
-                writer.WriteLine(anagram);
+                        // Unos komande za početak igre
+                        string startCommand = Console.ReadLine(); // Unos START
+                        writer.WriteLine(startCommand);
 
-                // Prikazivanje rezultata
-                Console.WriteLine("Odgovor servera: " + reader.ReadLine());
+                        // Čekanje na pomešana slova od servera
+                        string mixedLetters = reader.ReadLine();
+                        Console.WriteLine("" + mixedLetters);
+
+                        // Unos anagrama
+                        Console.Write("Unesite vaš anagram: ");
+                        string anagram = Console.ReadLine();
+                        writer.WriteLine(anagram);
+
+                        // Prikazivanje rezultata
+                        string result = reader.ReadLine();
+                        Console.WriteLine("Odgovor servera: " + result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Neispravan odgovor od servera. Format odgovora nije ispravan.");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Greška prilikom obrade odgovora servera: " + ex.Message);
+                }
             }
-
+            else
+            {
+                Console.WriteLine("Neispravan odgovor od servera.");
+            }
         }
     }
-       
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,17 +13,22 @@ namespace Server
 {
     internal class Program
     {
-       
-        private static UdpClient udpListener; // Slusa UDP poruke
-        private static TcpListener tcpListener; // Slusa TCP konekcije
+        private static Socket udpSocket; // UDP socket
+        private static Socket tcpSocket; // TCP socket
         private static Dictionary<int, Igrac> igraci; // Skladisti informacije o igracima
         private static Dictionary<int, List<string>> igrePoIgracima; // Skladisti igre po ID-ovima igraca
         private static int playerIdCounter = 1; // Brojac ID-a igraca
+
         static void Main(string[] args)
         {
-            udpListener = new UdpClient(5000);
-            tcpListener = new TcpListener(IPAddress.Any, 5001);
-            tcpListener.Start();
+            // Pokretanje UDP soketa
+            udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            udpSocket.Bind(new IPEndPoint(IPAddress.Any, 5000));
+
+            // Pokretanje TCP soketa
+            tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            tcpSocket.Bind(new IPEndPoint(IPAddress.Any, 5001));
+            tcpSocket.Listen(10);
 
             igraci = new Dictionary<int, Igrac>();
             igrePoIgracima = new Dictionary<int, List<string>>();
@@ -42,10 +47,10 @@ namespace Server
             {
                 while (true)
                 {
-                    TcpClient client = tcpListener.AcceptTcpClient();
+                    Socket clientSocket = tcpSocket.Accept();
                     Thread clientThread = new Thread(() =>
                     {
-                        HandleClient(client);
+                        HandleClient(clientSocket);
                     });
                     clientThread.Start();
                 }
@@ -55,22 +60,20 @@ namespace Server
 
         private static void HandleUdpRequests()
         {
+            byte[] buffer = new byte[1024];
             while (true)
             {
-                IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
-                byte[] receivedData = udpListener.Receive(ref remoteEndPoint);
-                string message = Encoding.UTF8.GetString(receivedData);
+                EndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
+                int receivedBytes = udpSocket.ReceiveFrom(buffer, ref remoteEndPoint);
+                string message = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
 
                 if (message.StartsWith("PRIJAVA:"))
                 {
-                    // Parsiranje poruke
                     string[] parts = message.Substring(8).Split(new[] { ',' }, 2);
-
                     if (parts.Length < 2)
                     {
                         string errorResponse = "Neispravna prijava. Format: PRIJAVA: [ime/nadimak], [igre]";
-                        byte[] errorData = Encoding.UTF8.GetBytes(errorResponse);
-                        udpListener.Send(errorData, errorData.Length, remoteEndPoint);
+                        udpSocket.SendTo(Encoding.UTF8.GetBytes(errorResponse), remoteEndPoint);
                         continue;
                     }
 
@@ -78,17 +81,14 @@ namespace Server
                     string gamesList = parts[1].Trim();
                     string[] requestedGames = gamesList.Split(',').Select(g => g.Trim()).ToArray();
 
-                    
                     bool validGames = requestedGames.All(g => g == "an" || g == "po" || g == "as");
                     if (!validGames)
                     {
                         string errorResponse = "Neispravna lista igara. Dozvoljene igre: an, po, as";
-                        byte[] errorData = Encoding.UTF8.GetBytes(errorResponse);
-                        udpListener.Send(errorData, errorData.Length, remoteEndPoint);
+                        udpSocket.SendTo(Encoding.UTF8.GetBytes(errorResponse), remoteEndPoint);
                         continue;
                     }
 
-                    
                     Igrac igrac = new Igrac
                     {
                         Id = playerIdCounter++,
@@ -97,17 +97,15 @@ namespace Server
                     igraci[igrac.Id] = igrac;
                     igrePoIgracima[igrac.Id] = new List<string>(requestedGames);
 
-                    // Slanje odgovora klijentu sa TCP informacijama
-                    string response = $"TCP INFO: {GetLocalIpAddress()}:{((IPEndPoint)tcpListener.LocalEndpoint).Port}";
-                    byte[] responseData = Encoding.UTF8.GetBytes(response);
-                    udpListener.Send(responseData, responseData.Length, remoteEndPoint);
+                    string response = $"TCP INFO: {GetLocalIpAddress()}:{((IPEndPoint)tcpSocket.LocalEndPoint).Port}";
+                    udpSocket.SendTo(Encoding.UTF8.GetBytes(response), remoteEndPoint);
                 }
             }
         }
 
-        private static void HandleClient(TcpClient client)
+        private static void HandleClient(Socket clientSocket)
         {
-            NetworkStream stream = client.GetStream();
+            NetworkStream stream = new NetworkStream(clientSocket);
             StreamReader reader = new StreamReader(stream);
             StreamWriter writer = new StreamWriter(stream) { AutoFlush = true };
 
@@ -123,47 +121,39 @@ namespace Server
                 Igrac igrac = igraci[playerId];
                 bool isTrainingGame = igrePoIgracima[playerId].Contains("as");
 
-                
                 string welcomeMessage = isTrainingGame
                     ? $"Dobrodošli u trening igru kviza Kviskoteka, današnji takmičar je {igrac.ImeNadimak}"
                     : $"Dobrodošli u igru kviza Kviskoteka, današnji takmičar je {igrac.ImeNadimak}";
 
                 writer.WriteLine(welcomeMessage);
-
-               
                 writer.WriteLine("Unesite START da biste započeli igru.");
 
-                
-                string startMessage = reader.ReadLine()?.Trim(); // Čeka unos od klijenta(START)
-
+                string startMessage = reader.ReadLine()?.Trim();
                 if (startMessage == "START")
                 {
                     List<string> igreZaIgraca = igrePoIgracima[playerId];
 
-                    // Provera da li je izabrana igra "an" (Anagram)
                     if (igreZaIgraca.Contains("an"))
-                    { 
-                         Anagram game = new Anagram();
-                        game.UcitajRec("words.txt"); 
-                         string scrambledWord = game.GenerisiAnagram(); 
+                    {
+                        Anagram game = new Anagram();
+                        game.UcitajRec("words.txt");
+                        string scrambledWord = game.GenerisiAnagram();
 
-                    
-                         writer.WriteLine($"Pomešana slova: {scrambledWord}");
-
-                         // Cekamo unos anagrama od klijenta
-                        string clientAnagram = reader.ReadLine()?.Trim(); 
+                        writer.WriteLine($"Pomešana slova: {scrambledWord}");
+                        string clientAnagram = reader.ReadLine()?.Trim();
 
                         if (!string.IsNullOrEmpty(clientAnagram))
                         {
                             game.PredloženAnagram = clientAnagram;
                             if (game.ProveriAnagram())
                             {
-                             int points = game.IzracunajPoene();
-                             writer.WriteLine($"Tačno! Osvojili ste {points} poena.");
-                             }
-                        else
-                        {
-                            writer.WriteLine("Netačno. Pokušajte ponovo.");
+                                int points = game.IzracunajPoene();
+                                writer.WriteLine($"Tačno! Osvojili ste {points} poena.");
+                            }
+                            else
+                            {
+                                writer.WriteLine("Netačno. Pokušajte ponovo.");
+                            }
                         }
                     }
                     else
@@ -175,9 +165,6 @@ namespace Server
                 {
                     writer.WriteLine("Niste poslali START. Pokušajte ponovo.");
                 }
-                    }
-
-                       
             }
             catch (IOException ex)
             {
@@ -185,23 +172,20 @@ namespace Server
             }
             finally
             {
-                client.Close();
+                clientSocket.Close();
             }
-
         }
 
         private static string GetLocalIpAddress()
         {
             foreach (var item in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
             {
-                if (item.AddressFamily == AddressFamily.InterNetwork) // Samo IPv4 adrese
+                if (item.AddressFamily == AddressFamily.InterNetwork)
                 {
                     return item.ToString();
                 }
             }
-            return "127.0.0.1"; // Podrazumevano na localhost ako nije pronađena IPv4 adresa
+            return "127.0.0.1";
         }
-
     }
 }
-
