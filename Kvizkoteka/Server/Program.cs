@@ -151,17 +151,16 @@ namespace Server
                                 int points = game.IzracunajPoene();
                                 totalPoints += points;
                                 writer.WriteLine($"Tačno! Osvojili ste {points} poena.");
+                                writer.WriteLine(points);
                             }
                             else
                             {
                                 writer.WriteLine("Netačno. Pokušajte ponovo.");
+                                writer.WriteLine(0);
                             }
                         }
                     }
-                    else
-                    {
-                        writer.WriteLine("Niste uneli ništa. Pokušajte ponovo.");
-                    }
+                    
 
                     if (igreZaIgraca.Contains("po"))
                     {
@@ -178,27 +177,25 @@ namespace Server
                             }
 
                             writer.WriteLine($"Pitanje {i + 1}: {game.TekucePitanje}");
-                            writer.WriteLine("a) Tacno");
-                            writer.WriteLine("b) Netacno");
+                            //writer.WriteLine("a) Tacno");
+                            //writer.WriteLine("b) Netacno");
 
                             string clientAnswer = reader.ReadLine()?.Trim().ToLower();
 
                             if (clientAnswer == "a" || clientAnswer == "b")
                             {
-                                int points = game.ProveriOdgovor(clientAnswer);
-                                totalPoints += points;
-                                writer.WriteLine($"Trenutni broj poena: {totalPoints}");
+                                bool isCorrect = game.ProveriOdgovor(clientAnswer);
 
-                                if (points > 0)
+                                // Ako je odgovor tačan (isCorrect je true)
+                                if (isCorrect)
                                 {
-                                    writer.WriteLine("Tacno! Osvojili ste 4 poena.");
+                                    totalPoints += 4; // Dodajemo 4 poena
+                                    writer.WriteLine("Tačno! Osvojili ste 4 poena.");
                                 }
                                 else
                                 {
-                                    writer.WriteLine("Netačno. Pokušajte ponovo.");
+                                    writer.WriteLine("Netačno.");
                                 }
-
-                                prethodniOdgovori.Add(points > 0);
                             }
                             else
                             {

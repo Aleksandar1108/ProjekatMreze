@@ -10,6 +10,8 @@ namespace Klijent
     {
         public static void Main(string[] args)
         {
+
+            int totalPoints = 0;
             // Unos imena/nadimka i igara
             Console.Write("Unesite ime/nadimak: ");
             string ime = Console.ReadLine();
@@ -62,59 +64,76 @@ namespace Klijent
                         // Unos komande za početak igre
                         string startCommand = Console.ReadLine(); // Unos START
                         writer.WriteLine(startCommand);
-
-                        // Čekanje na pomešana slova od servera
-                        string mixedLetters = reader.ReadLine();
-                        Console.WriteLine("" + mixedLetters);
-
-                        // Unos anagrama
-                        Console.Write("Unesite vaš anagram: ");
-                        string anagram = Console.ReadLine();
-                        writer.WriteLine(anagram);
-
-                        // Prikazivanje rezultata
-                        string result = reader.ReadLine();
-                        Console.WriteLine("Odgovor servera: " + result);
-
-                        int totalPoints = 0;
-
-                        // Ako je igra "Pitanja i odgovori", čeka pitanja i odgovara
-                        Console.WriteLine("Odgovorite na sledeće pitanje: ");
-                        for (int i = 0; i < 10; i++) // Postavljanje 10 pitanja
+                        
+                        if(igre.Contains("an"))
                         {
-                            string pitanje = reader.ReadLine(); // Pitanje od servera
-                            if (pitanje == "Nema više pitanja.") break;
+                            // Čekanje na pomešana slova od servera
+                            string mixedLetters = reader.ReadLine();
+                            Console.WriteLine("" + mixedLetters);
 
-                            // Prikazivanje pitanja i opcija
-                            Console.WriteLine(pitanje); // Ispisivanje pitanja
-                            Console.WriteLine("a) Tačno");
-                            Console.WriteLine("b) Netačno");
+                            // Unos anagrama
+                            Console.Write("Unesite vaš anagram: ");
+                            string anagram = Console.ReadLine();
+                            writer.WriteLine(anagram);
 
-                            string odgovor = Console.ReadLine(); // Unos odgovora (A ili B)
-                            writer.WriteLine(odgovor);
+                            // Prikazivanje rezultata
+                            string result = reader.ReadLine();
+                            Console.WriteLine("Odgovor servera: " + result);
 
-                            // Čitanje rezultata od servera
-                            string odgovorServera = reader.ReadLine();
-                            Console.WriteLine(odgovorServera);
-
-                            // Ako je odgovor tačan, dodaj 4 poena
-                            if (odgovorServera.Contains("Tačno"))
+                            if (int.TryParse(reader.ReadLine(), out int anagramPoints))
                             {
-                                totalPoints += 4; // Dodaj 4 poena za tačan odgovor
-                            }
-                            else
-                            {
-                                // Ako nije tačno, poeni ostaju isti
-                                Console.WriteLine("Odgovor je netačan. Poeni ostaju isti.");
+                                totalPoints += anagramPoints;
+                                Console.WriteLine($"Poeni osvojeni u anagramu: {anagramPoints}");
                             }
 
-                            // Prikazivanje trenutnih bodova
-                            Console.WriteLine($"Trenutni broj poena: {totalPoints}");
-                            Console.WriteLine(); // Prazna linija za lepu separaciju između pitanja
                         }
 
-                        // Prikazivanje ukupnog broja poena
-                        Console.WriteLine($"Ukupno poena: {totalPoints}");
+                       if(igre.Contains("po"))
+                        {
+
+                            // Ako je igra "Pitanja i odgovori", čeka pitanja i odgovara
+                             Console.WriteLine("Odgovorite na sledeće pitanje: ");
+                            for (int i = 0; i < 10; i++) // Postavljanje 10 pitanja
+                            { 
+
+
+
+                                string pitanje = reader.ReadLine(); // Pitanje od servera
+                                if (pitanje == "Nema više pitanja.") break;
+
+                                // Prikazivanje pitanja i opcija
+                                Console.WriteLine(pitanje); // Ispisivanje pitanja
+                                Console.WriteLine("a) Tačno");
+                                Console.WriteLine("b) Netačno");
+
+                                string odgovor = Console.ReadLine(); // Unos odgovora (A ili B)
+                                writer.WriteLine(odgovor);
+
+                                // Čitanje rezultata od servera
+                                string odgovorServera = reader.ReadLine();
+                                Console.WriteLine(odgovorServera);
+
+                                // Ako je odgovor tačan, dodaj 4 poena
+                                if (odgovorServera.Contains("Tačno"))
+                                {
+                                    totalPoints += 4; // Dodaj 4 poena za tačan odgovor
+                                }
+                                else
+                                {
+                                    // Ako nije tačno, poeni ostaju isti
+                                    Console.WriteLine("Odgovor je netačan. Poeni ostaju isti.");
+                                }
+
+                                // Prikazivanje trenutnih bodova
+                                Console.WriteLine($"Trenutni broj poena: {totalPoints}");
+                                Console.WriteLine(); // Prazna linija za lepu separaciju između pitanja
+                            }
+
+                            // Prikazivanje ukupnog broja poena
+                            Console.WriteLine($"Ukupno poena: {totalPoints}");
+                        }
+
+                       
                     }
                     else
                     {

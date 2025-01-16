@@ -37,6 +37,7 @@ namespace Server
 
         public bool PostaviPitanje(List<bool> prethodniOdgovori)
         {
+
             if (SvaPitanja.Count == 0) return false; // Nema više pitanja
 
             // Sprečavanje više od tri ista odgovora u sekvenci
@@ -64,10 +65,11 @@ namespace Server
 
 
         // Metoda za proveru odgovora
-        public int ProveriOdgovor(string odgovor)
+        public bool ProveriOdgovor(string odgovor)
         {
-            bool odgovorTacan = (odgovor.ToUpper() == "A" && TacanOdgovor) || (odgovor.ToUpper() == "B" && !TacanOdgovor);
-            return odgovorTacan ? 4 : 0; // Tačan odgovor donosi 4 poena, netačan 0
+            // Proveravamo da li je odgovor tačan na osnovu definicije TacanOdgovor
+            return (odgovor.ToUpper() == "A" && TacanOdgovor) || (odgovor.ToUpper() == "B" && !TacanOdgovor);
         }
+
     }
 }
