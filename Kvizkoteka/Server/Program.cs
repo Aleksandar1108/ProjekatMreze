@@ -205,6 +205,50 @@ namespace Server
 
                         writer.WriteLine($"Ukupno poena: {totalPoints}");
                     }
+                    if (igreZaIgraca.Contains("as"))
+                    {
+                        Asocijacije igra = new Asocijacije();
+                        int ukupnoPoena = 0;
+
+                        while (true)
+                        {
+                            // Prikazujemo trenutno stanje asocijacije
+                            writer.WriteLine("Trenutno stanje asocijacije:");
+                            igra.PrikaziAsocijaciju();
+
+                            // Tražimo unos od igrača
+                            writer.WriteLine("Unesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/rešenja (K: odgovor).");
+                            string unos = reader.ReadLine()?.Trim();
+
+                            if (string.IsNullOrEmpty(unos))
+                            {
+                                writer.WriteLine("Nevalidan unos. Pokušajte ponovo.");
+                                continue;
+                            }
+
+                            // Obradimo unos i proverimo poene
+                            int poeni = igra.OtvoriPolje(unos);
+                            ukupnoPoena += poeni;
+
+                            // Ako je asocijacija rešena, izlazimo iz petlje
+                            if (igra.OtvorenaPolja.All(k => k.All(o => o)))
+                            {
+                                writer.WriteLine($"Čestitamo! Rešili ste asocijaciju. Ukupno poena: {ukupnoPoena}");
+                                break; // Završen je deo igre za asocijacije
+                            }
+
+                            // Ako su svi polja otključana, obaveštavamo igrača
+                            if (poeni > 0)
+                            {
+                                writer.WriteLine($"Osvojili ste {poeni} poena.");
+                            }
+                            else
+                            {
+                                writer.WriteLine("Netačan odgovor. Pokušajte ponovo.");
+                            }
+                        }
+
+                    }
                 }
                 else
                 {

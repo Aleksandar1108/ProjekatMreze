@@ -131,6 +131,51 @@ namespace Klijent
 
                             // Prikazivanje ukupnog broja poena
                             Console.WriteLine($"Ukupno poena: {totalPoints}");
+                        } 
+
+                       if(igre.Contains("as"))
+                        {
+                            // Čekanje na trenutno stanje asocijacije (polja koja su otvorena)
+                            string currentState = reader.ReadLine();
+                            Console.WriteLine(currentState); // Ispisivanje trenutnog stanja asocijacije
+
+                            // Igra Asocijacija
+                            while (true)
+                            {
+                                // Čekanje na unos od servera za sledeće polje ili rešenje
+                                string prompt = reader.ReadLine();
+                                if (prompt == "Kraj igre" || prompt == "Pobedili ste!")
+                                {
+                                    break;
+                                }
+
+                                Console.WriteLine(prompt); // Ispisivanje instrukcija ili trenutnog stanja
+
+                                // Unos odgovora za otvaranje polja (npr. "A1", "B3", itd.)
+                                Console.Write("Unesite oznaku polja (npr. A1, B2...): ");
+                                string field = Console.ReadLine();
+                                writer.WriteLine(field); // Slanje odgovora serveru
+
+                                // Čitanje odgovora servera
+                                string result = reader.ReadLine();
+                                Console.WriteLine(result);
+
+                                // Ako je igrač rešio asocijaciju, treba da se prikaže konačan rezultat
+                                if (result.Contains("Konačno rešenje"))
+                                {
+                                    break;
+                                }
+
+                                // Možemo dodati i procenu poena ako server vraća podatke o poenima
+                                if (int.TryParse(reader.ReadLine(), out int pointsForField))
+                                {
+                                    totalPoints += pointsForField;
+                                    Console.WriteLine($"Poeni osvojeni za ovo polje: {pointsForField}");
+                                }
+                            }
+
+                            // Nakon što su svi odgovori poslati, ispisujemo ukupne poene
+                            Console.WriteLine($"Ukupno poena u Asocijacijama: {totalPoints}");
                         }
 
                        
