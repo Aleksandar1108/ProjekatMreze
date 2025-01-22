@@ -21,6 +21,10 @@ namespace Server
 
         static void Main(string[] args)
         {
+
+
+
+
             // Pokretanje UDP soketa
             udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             udpSocket.Bind(new IPEndPoint(IPAddress.Any, 5000));
@@ -35,27 +39,37 @@ namespace Server
 
             Console.WriteLine("Server pokrenut...");
 
-            // Pokretanje UDP niti
-            Thread udpThread = new Thread(() =>
-            {
-                HandleUdpRequests();
-            });
-            udpThread.Start();
 
-            // Pokretanje TCP niti
-            Thread tcpThread = new Thread(() =>
+            _ = Task.Run(() => HandleUdpRequests());
+
+            while (true)
             {
-                while (true)
-                {
-                    Socket clientSocket = tcpSocket.Accept();
-                    Thread clientThread = new Thread(() =>
-                    {
-                        HandleClient(clientSocket);
-                    });
-                    clientThread.Start();
-                }
-            });
-            tcpThread.Start();
+                Socket clientSocket = tcpSocket.Accept(); // Sinhrono prihvatanje klijenta
+                Task.Run(() => HandleClient(clientSocket)); // Pokretanje zadatka za svakog klijenta
+            }
+
+            // Pokretanje UDP niti
+            /* Thread udpThread = new Thread(() =>
+             {
+                 HandleUdpRequests();
+             });
+             udpThread.Start();
+
+             // Pokretanje TCP niti
+             Thread tcpThread = new Thread(() =>
+             {
+                 while (true)
+                 {
+                     Socket clientSocket = tcpSocket.Accept();
+                     Thread clientThread = new Thread(() =>
+                     {
+                         HandleClient(clientSocket);
+                     });
+                     clientThread.Start();
+                 }
+             });
+         
+             //tcpThread.Start();*/
         }
 
         private static void HandleUdpRequests()

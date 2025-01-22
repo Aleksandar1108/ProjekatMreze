@@ -3,15 +3,15 @@
   "WorkspaceRootPath": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|c:\\users\\windows 10\\source\\repos\\projekatmreze\\kvizkoteka\\klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|solutionrelative:klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|c:\\users\\windows 10\\source\\repos\\projekatmreze\\kvizkoteka\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|c:\\users\\windows 10\\source\\repos\\projekatmreze\\kvizkoteka\\server\\asocijacije.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|solutionrelative:klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\server\\asocijacije.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\asocijacije.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -34,21 +34,29 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
               "RelativeDocumentMoniker": "Server\\Program.cs",
               "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
               "RelativeToolTip": "Server\\Program.cs",
-              "ViewState": "AQIAAMwAAAAAAAAAAAAIwPoAAAAVAAAA",
+              "ViewState": "AQIAADEAAAAAAAAAAAAkwCwAAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-11T15:41:56.093Z",
               "IsPinned": true,
               "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
               "$type": "Document",
@@ -60,16 +68,7 @@
               "RelativeToolTip": "Server\\Asocijacije.cs",
               "ViewState": "AQIAAGUAAAAAAAAAAADwv4EAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-18T13:58:19.268Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+              "WhenOpened": "2025-01-18T13:58:19.268Z"
             },
             {
               "$type": "Document",
@@ -97,16 +96,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Klijent\\Program.cs",
               "RelativeDocumentMoniker": "Klijent\\Program.cs",
               "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Klijent\\Program.cs",
               "RelativeToolTip": "Klijent\\Program.cs",
-              "ViewState": "AQIAAIMAAAAAAAAAAAAIwLEAAABeAAAA",
+              "ViewState": "AQIAAA0AAAAAAAAAAAAQwKUAAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-11T15:40:20.908Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-11T15:40:20.908Z"
             },
             {
               "$type": "Document",
