@@ -142,6 +142,47 @@ namespace Klijent
                             // Igra Asocijacija
                             while (true)
                             {
+
+                                // Primi kompletno stanje igre od servera
+                                string stanje = reader.ReadLine();
+                                Console.WriteLine("\nTrenutno stanje igre:\n");
+                                Console.WriteLine(stanje); // Ispisivanje kompletne tabele igre
+
+                                // Unos komande od strane korisnika
+                                Console.Write("\nUnesite komandu (polje, resenje, ili izlaz): ");
+                                string unos = Console.ReadLine();
+                                writer.WriteLine(unos);
+
+                                // Ako je unos "izlaz", prekid igre
+                                if (unos.Equals("izlaz", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Console.WriteLine("Napustili ste igru.");
+                                    break;
+                                }
+
+                                // Primi odgovor servera i prikaži ga
+                                string odgovor = reader.ReadLine();
+                                Console.WriteLine("\nOdgovor servera: ");
+                                Console.WriteLine(odgovor);
+
+                                // Proveri da li je igra završena
+                                if (odgovor.Contains("Kraj igre") || odgovor.Contains("Pobedili ste!"))
+                                {
+                                    Console.WriteLine("\nIgra je završena!");
+                                    break;
+                                }
+
+
+
+
+
+
+
+
+
+
+
+                                /*
                                 // Čekanje na unos od servera za sledeće polje ili rešenje
                                 string prompt = reader.ReadLine();
                                 if (prompt == "Kraj igre" || prompt == "Pobedili ste!")
@@ -172,6 +213,7 @@ namespace Klijent
                                     totalPoints += pointsForField;
                                     Console.WriteLine($"Poeni osvojeni za ovo polje: {pointsForField}");
                                 }
+                                */
                             }
 
                             // Nakon što su svi odgovori poslati, ispisujemo ukupne poene

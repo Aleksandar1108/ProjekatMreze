@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Server
 {
     public class Asocijacije
-    { 
+    {
         public string[][] Kolone { get; set; }
         public bool[][] OtvorenaPolja { get; set; }
         public string KonacnoResenje { get; set; }
@@ -110,8 +110,39 @@ namespace Server
             return poeni;
         }
 
-        public void PrikaziAsocijaciju()
+        public string PrikaziAsocijaciju()
         {
+            StringBuilder sb = new StringBuilder();
+
+            for (int kolona = 0; kolona < 4; kolona++)
+            {
+                for (int red = 0; red < 4; red++)
+                {
+                    if (OtvorenaPolja[kolona][red])
+                    {
+                        sb.AppendLine($"{(char)('A' + kolona)}{red + 1}:{Kolone[kolona][red]}");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"{(char)('A' + kolona)}{red + 1}:???");
+                    }
+                }
+
+                if (OtvorenaPolja[kolona][4])
+                {
+                    sb.AppendLine($"{(char)('A' + kolona)}:{Kolone[kolona][4]}");
+                }
+                else
+                {
+                    sb.AppendLine($"{(char)('A' + kolona)}:???");
+                }
+            }
+
+            sb.AppendLine($"Konačno rešenje: {(OtvorenaPolja.All(k => k.All(o => o)) ? KonacnoResenje : "???")}");
+            return sb.ToString();
+
+
+            /*
             for (int kolona = 0; kolona < 4; kolona++)
             {
                 Console.WriteLine((char)('A' + kolona) + ":");
@@ -130,8 +161,9 @@ namespace Server
             }
             Console.WriteLine($"Konačno rešenje: {(OtvorenaPolja.All(k => k.All(o => o)) ? KonacnoResenje : "???")}");
         }
+            */
 
 
-
+        }
     }
 }

@@ -191,8 +191,7 @@ namespace Server
                             }
 
                             writer.WriteLine($"Pitanje {i + 1}: {game.TekucePitanje}");
-                            //writer.WriteLine("a) Tacno");
-                            //writer.WriteLine("b) Netacno");
+                            
 
                             string clientAnswer = reader.ReadLine()?.Trim().ToLower();
 
@@ -226,6 +225,38 @@ namespace Server
 
                         while (true)
                         {
+
+                            writer.WriteLine($"Trenutno stanje: {igra.PrikaziAsocijaciju()}");
+                            writer.WriteLine("Unesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/rešenja (K: odgovor).");
+
+                            string unos = reader.ReadLine()?.Trim();
+
+                            if (string.IsNullOrEmpty(unos))
+                            {
+                                writer.WriteLine("Nevalidan unos. Pokušajte ponovo.");
+                                continue;
+                            }
+
+                            // Obraditi unos i proveriti poene
+                            int poeni = igra.OtvoriPolje(unos);
+                            ukupnoPoena += poeni;
+
+                            // Provera da li su sva polja otvorena
+                            if (igra.OtvorenaPolja.All(k => k.All(o => o)))
+                            {
+                                writer.WriteLine($"Čestitamo! Rešili ste asocijaciju. Ukupno poena: {ukupnoPoena}");
+                                break;
+                            }
+
+                            if (poeni > 0)
+                            {
+                                writer.WriteLine($"Osvojili ste {poeni} poena.");
+                            }
+                            else
+                            {
+                                writer.WriteLine("Netačan odgovor. Pokušajte ponovo.");
+                            }
+                            /*
                             // Prikazujemo trenutno stanje asocijacije
                             writer.WriteLine("Trenutno stanje asocijacije:");
                             igra.PrikaziAsocijaciju();
@@ -259,7 +290,7 @@ namespace Server
                             else
                             {
                                 writer.WriteLine("Netačan odgovor. Pokušajte ponovo.");
-                            }
+                            } */
                         }
 
                     }
