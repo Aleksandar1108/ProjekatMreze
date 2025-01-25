@@ -143,6 +143,46 @@ namespace Klijent
                             while (true)
                             {
 
+
+                                // Primi kompletno stanje igre od servera
+                                // Console.WriteLine("\nTrenutno stanje igre:\n");
+
+                                // Primi kompletno stanje igre od servera
+                                string linija;
+                                while ((linija = reader.ReadLine()) != null && linija != "END")
+                                {
+                                    Console.WriteLine(linija); // Prikaz svake linije stanja igre
+                                }
+
+                                // Čekaj unos od korisnika
+                                Console.Write("\nUnesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/resenja (K: odgovor): ");
+                                string unos = Console.ReadLine();
+
+                                // Pošalji unos serveru
+                                writer.WriteLine(unos);
+
+                                // Ako je unos "izlaz", prekid igre
+                                if (unos.Equals("izlaz", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Console.WriteLine("Napustili ste igru.");
+                                    break;
+                                }
+
+                                // Primi odgovor servera i prikaži ga
+                                Console.WriteLine("\nOdgovor servera:");
+                                while ((linija = reader.ReadLine()) != null && linija != "END")
+                                {
+                                    Console.WriteLine(linija);
+                                }
+
+                                // Proveri da li je igra završena
+                                if (linija != null && (linija.Contains("Kraj igre") || linija.Contains("Pobedili ste!")))
+                                {
+                                    Console.WriteLine("\nIgra je završena!");
+                                    break;
+                                }
+
+                                /*
                                 // Primi kompletno stanje igre od servera
                                 string stanje = reader.ReadLine();
                                 Console.WriteLine("\nTrenutno stanje igre:\n");
@@ -171,6 +211,38 @@ namespace Klijent
                                     Console.WriteLine("\nIgra je završena!");
                                     break;
                                 }
+
+                                */
+
+
+                                /* // Primi kompletno stanje igre od servera
+                                 string stanje = reader.ReadLine();
+                                 Console.WriteLine("\nTrenutno stanje igre:\n");
+                                 Console.WriteLine(stanje); // Ispisivanje kompletne tabele igre
+
+                                 // Unos komande od strane korisnika
+                                 Console.Write("\nUnesite komandu (polje, resenje, ili izlaz): ");
+                                 string unos = Console.ReadLine();
+                                 writer.WriteLine(unos);
+
+                                 // Ako je unos "izlaz", prekid igre
+                                 if (unos.Equals("izlaz", StringComparison.OrdinalIgnoreCase))
+                                 {
+                                     Console.WriteLine("Napustili ste igru.");
+                                     break;
+                                 }
+
+                                 // Primi odgovor servera i prikaži ga
+                                 string odgovor = reader.ReadLine();
+                                 Console.WriteLine("\nOdgovor servera: ");
+                                 Console.WriteLine(odgovor);
+
+                                 // Proveri da li je igra završena
+                                 if (odgovor.Contains("Kraj igre") || odgovor.Contains("Pobedili ste!"))
+                                 {
+                                     Console.WriteLine("\nIgra je završena!");
+                                     break;
+                                 }*/
 
 
 
