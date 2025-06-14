@@ -234,41 +234,32 @@ namespace Server
                         }
                         writer.WriteLine("END");
 
-                        while (!krajIgre)
+
+
+                        while (true)
                         {
                             string unos = reader.ReadLine();
-
-                            if (unos == null)
-                            {
-                                writer.WriteLine("Prekinuto od strane korisnika.");
-                                writer.WriteLine("END");
-                                break;
-                            }
-
-                            if (unos.Equals("izlaz", StringComparison.OrdinalIgnoreCase))
-                            {
-                                writer.WriteLine("Napustili ste igru.");
-                                writer.WriteLine("END");
-                                break;
-                            }
+                            if (unos == null) break;
 
                             string odgovor = asocijacije.OtvoriPolje(unos);
 
-                            foreach (string linija in odgovor.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries))
+                            // Pošalji redove odgovora liniju po liniju
+                            foreach (var linija in odgovor.Split('\n'))
                             {
-                                writer.WriteLine(linija);
+                                writer.WriteLine(linija.TrimEnd());
                             }
 
                             writer.WriteLine("END");
+                            writer.Flush();
 
-                            if (asocijacije.OtvorenaPolja.All(k => k.All(p => p)))
+                            if (asocijacije.DaLiJeKraj())
                             {
-                                writer.WriteLine("Čestitamo! Rešili ste celu asocijaciju.");
+                                writer.WriteLine("Kraj igre");
                                 writer.WriteLine("END");
-                                krajIgre = true;
+                                writer.Flush();
+                                break;
                             }
                         }
-
 
 
 

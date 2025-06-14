@@ -144,36 +144,24 @@ namespace Klijent
                             {
 
 
-                                // Primi kompletno stanje igre od servera
-                                // Console.WriteLine("\nTrenutno stanje igre:\n");
+                                
+                                    Console.Write("\nUnesite komandu (A1, B2, A:odgovor, K:resenje, izlaz): ");
+                                    string komanda = Console.ReadLine();
+                                    if (komanda == null || komanda.ToLower() == "izlaz") break;
 
-                                // Primi kompletno stanje igre od servera
-                                string linija;
-                                while ((linija = reader.ReadLine()) != null && linija != "END")
-                                {
-                                    Console.WriteLine(linija); // Prikaz svake linije stanja igre
-                                }
+                                    writer.WriteLine(komanda);
+                                    writer.Flush();
 
-                                Console.Write("\nUnesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/resenja (K: odgovor): ");
-                                string unos = Console.ReadLine();
+                                    // Čekamo odgovor
+                                    string linija;
+                                    while ((linija = reader.ReadLine()) != null)
+                                    {
+                                        if (linija == "END") break;
+                                        Console.WriteLine(linija);
+                                    }
+                                
 
-                                // Pošalji unos serveru
-                                writer.WriteLine(unos);
 
-                                // Ako je unos "izlaz", prekid igre
-                                if (unos.Equals("izlaz", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    Console.WriteLine("Napustili ste igru.");
-                                    return;
-                                }
-
-                                // Primi odgovor servera i prikaži ga
-                                Console.WriteLine("\nOdgovor servera:");
-                              
-                                while ((linija = reader.ReadLine()) != null && linija != "END")
-                                {
-                                    Console.WriteLine(linija);
-                                }
 
 
 
