@@ -220,11 +220,63 @@ namespace Server
                     }
                     if (igreZaIgraca.Contains("as"))
                     {
-                        Asocijacije igra = new Asocijacije();
-                        int ukupnoPoena = 0;
 
-                        while (true)
+                        Asocijacije asocijacije = new Asocijacije();
+                        int brojPokusaja = 0;
+                        const int maxPokusaja = 5;
+                        bool krajIgre = false;
+
+                        // Početni prikaz stanja igre
+                        string stanje = asocijacije.PrikaziAsocijaciju();
+                        foreach (string linija in stanje.Split('\n'))
                         {
+                            writer.WriteLine(linija);
+                        }
+                        writer.WriteLine("END");
+
+                        while (!krajIgre)
+                        {
+                            string unos = reader.ReadLine();
+
+                            if (unos == null)
+                            {
+                                writer.WriteLine("Prekinuto od strane korisnika.");
+                                writer.WriteLine("END");
+                                break;
+                            }
+
+                            if (unos.Equals("izlaz", StringComparison.OrdinalIgnoreCase))
+                            {
+                                writer.WriteLine("Napustili ste igru.");
+                                writer.WriteLine("END");
+                                break;
+                            }
+
+                            string odgovor = asocijacije.OtvoriPolje(unos);
+
+                            foreach (string linija in odgovor.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                writer.WriteLine(linija);
+                            }
+
+                            writer.WriteLine("END");
+
+                            if (asocijacije.OtvorenaPolja.All(k => k.All(p => p)))
+                            {
+                                writer.WriteLine("Čestitamo! Rešili ste celu asocijaciju.");
+                                writer.WriteLine("END");
+                                krajIgre = true;
+                            }
+                        }
+
+
+
+
+                        //Asocijacije igra = new Asocijacije();
+                        //int ukupnoPoena = 0;
+
+                        //while (true)
+                        /*{
                             // Prikazujemo trenutno stanje asocijacije
                             writer.WriteLine($"\nTrenutno stanje: \n{igra.PrikaziAsocijaciju()}");
                             writer.WriteLine("Unesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/rešenja (K: odgovor).");
@@ -291,42 +343,42 @@ namespace Server
                             */
 
 
-                            /*
-                            // Prikazujemo trenutno stanje asocijacije
-                            writer.WriteLine("Trenutno stanje asocijacije:");
-                            igra.PrikaziAsocijaciju();
+                        /*
+                        // Prikazujemo trenutno stanje asocijacije
+                        writer.WriteLine("Trenutno stanje asocijacije:");
+                        igra.PrikaziAsocijaciju();
 
-                            // Tražimo unos od igrača
-                            writer.WriteLine("Unesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/rešenja (K: odgovor).");
-                            string unos = reader.ReadLine()?.Trim();
+                        // Tražimo unos od igrača
+                        writer.WriteLine("Unesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/rešenja (K: odgovor).");
+                        string unos = reader.ReadLine()?.Trim();
 
-                            if (string.IsNullOrEmpty(unos))
-                            {
-                                writer.WriteLine("Nevalidan unos. Pokušajte ponovo.");
-                                continue;
-                            }
-
-                            // Obradimo unos i proverimo poene
-                            int poeni = igra.OtvoriPolje(unos);
-                            ukupnoPoena += poeni;
-
-                            // Ako je asocijacija rešena, izlazimo iz petlje
-                            if (igra.OtvorenaPolja.All(k => k.All(o => o)))
-                            {
-                                writer.WriteLine($"Čestitamo! Rešili ste asocijaciju. Ukupno poena: {ukupnoPoena}");
-                                break; // Završen je deo igre za asocijacije
-                            }
-
-                            // Ako su svi polja otključana, obaveštavamo igrača
-                            if (poeni > 0)
-                            {
-                                writer.WriteLine($"Osvojili ste {poeni} poena.");
-                            }
-                            else
-                            {
-                                writer.WriteLine("Netačan odgovor. Pokušajte ponovo.");
-                            } */
+                        if (string.IsNullOrEmpty(unos))
+                        {
+                            writer.WriteLine("Nevalidan unos. Pokušajte ponovo.");
+                            continue;
                         }
+
+                        // Obradimo unos i proverimo poene
+                        int poeni = igra.OtvoriPolje(unos);
+                        ukupnoPoena += poeni;
+
+                        // Ako je asocijacija rešena, izlazimo iz petlje
+                        if (igra.OtvorenaPolja.All(k => k.All(o => o)))
+                        {
+                            writer.WriteLine($"Čestitamo! Rešili ste asocijaciju. Ukupno poena: {ukupnoPoena}");
+                            break; // Završen je deo igre za asocijacije
+                        }
+
+                        // Ako su svi polja otključana, obaveštavamo igrača
+                        if (poeni > 0)
+                        {
+                            writer.WriteLine($"Osvojili ste {poeni} poena.");
+                        }
+                        else
+                        {
+                            writer.WriteLine("Netačan odgovor. Pokušajte ponovo.");
+                        } */
+                        //}
 
                     }
                 }

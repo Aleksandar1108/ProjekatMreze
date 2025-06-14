@@ -39,9 +39,10 @@ namespace Server
             }
         }
 
-        public int OtvoriPolje(string unos)
+        public string OtvoriPolje(string unos)
         {
             int poeni = 0;
+            string poruka = "";
 
             if (unos.Contains(':'))
             {
@@ -61,11 +62,11 @@ namespace Server
                             }
                         }
                         poeni += 10;
-                        Console.WriteLine("Čestitamo! Tačno konačno rešenje! Dobijate 10 poena.");
+                        poruka = "Čestitamo! Tačno konačno rešenje! Dobijate 10 poena.\n";
                     }
                     else
                     {
-                        Console.WriteLine("Netačno konačno rešenje.");
+                        poruka = "Netačno konačno rešenje.\n";
                     }
                 }
                 else if ("ABCD".Contains(oznaka) && odgovor.Equals(Kolone[oznaka[0] - 'A'][4], StringComparison.OrdinalIgnoreCase))
@@ -79,19 +80,18 @@ namespace Server
                     }
 
                     poeni += neotvorenih + 2;
-                    Console.WriteLine($"Tačno rešenje kolone! Dobijate {neotvorenih + 2} poena.");
+                    poruka = $"Tačno rešenje kolone! Dobijate {neotvorenih + 2} poena.\n";
                 }
                 else
                 {
-                    Console.WriteLine("Netačan odgovor za kolonu.");
+                    poruka = "Netačan odgovor za kolonu.\n";
                 }
             }
             else
             {
                 if (unos.Length != 2 || !"ABCD".Contains(unos[0]) || !char.IsDigit(unos[1]))
                 {
-                    Console.WriteLine("Nevalidna oznaka polja.");
-                    return 0;
+                    return "Nevalidna oznaka polja.\n";
                 }
 
                 int kolona = unos[0] - 'A';
@@ -99,71 +99,79 @@ namespace Server
 
                 if (kolona < 0 || kolona > 3 || red < 0 || red > 4)
                 {
-                    Console.WriteLine("Oznaka polja nije u opsegu.");
-                    return 0;
+                    return "Oznaka polja nije u opsegu.\n";
+                }
+
+                if (OtvorenaPolja[kolona][red])
+                {
+                    return "Polje je već otvoreno.\n";
                 }
 
                 OtvorenaPolja[kolona][red] = true;
             }
 
-            PrikaziAsocijaciju();
-            return poeni;
+            poruka += PrikaziAsocijaciju();
+
+            return poruka;
         }
+
+
+
 
         public string PrikaziAsocijaciju()
         {
             StringBuilder sb = new StringBuilder();
 
-            for (int kolona = 0; kolona < 4; kolona++)
+            for (int k = 0; k < 4; k++) // kolone A-D
             {
-                for (int red = 0; red < 4; red++)
+                for (int r = 0; r < 4; r++) // redovi 1-4
                 {
-                    if (OtvorenaPolja[kolona][red])
-                    {
-                        sb.AppendLine($"{(char)('A' + kolona)}{red + 1}:{Kolone[kolona][red]}");
-                    }
+                    if (OtvorenaPolja[k][r])
+                        sb.Append($"{(char)('A' + k)}{r + 1}: {Kolone[k][r]}\n");
                     else
-                    {
-                        sb.AppendLine($"{(char)('A' + kolona)}{red + 1}:???");
-                    }
+                        sb.Append($"{(char)('A' + k)}{r + 1}: ???\n");
                 }
+                // Prikaži rešenje kolone ako je otvoreno
+                if (OtvorenaPolja[k][4]) // poslednji indeks za rešenje kolone
+                    sb.Append($"{(char)('A' + k)}: {Kolone[k][4]}\n");
+                else
+                    sb.Append($"{(char)('A' + k)}: ???\n");
+            }
 
-                if (OtvorenaPolja[kolona][4])
+            // Prikaži konačno rešenje ako je otvoreno (možeš imati boolean flag ili slično)
+            if (OtvorenaPolja.All(k => k.All(p => p)))
+                sb.Append($"Konacno resenje: {KonacnoResenje}\n");
+            else
+                sb.Append("Konacno resenje: ???\n");
+
+            return sb.ToString();
+        }
+
+
+
+
+        /*
+        for (int kolona = 0; kolona < 4; kolona++)
+        {
+            Console.WriteLine((char)('A' + kolona) + ":");
+            for (int red = 0; red < 4; red++)
+            {
+                if (OtvorenaPolja[kolona][red])
                 {
-                    sb.AppendLine($"{(char)('A' + kolona)}:{Kolone[kolona][4]}");
+                    Console.WriteLine($" {red + 1}: {Kolone[kolona][red]}");
                 }
                 else
                 {
-                    sb.AppendLine($"{(char)('A' + kolona)}:???");
+                    Console.WriteLine($" {red + 1}: ???");
                 }
             }
-
-            sb.AppendLine($"Konačno rešenje: {(OtvorenaPolja.All(k => k.All(o => o)) ? KonacnoResenje : "???")}");
-            return sb.ToString();
-
-
-            /*
-            for (int kolona = 0; kolona < 4; kolona++)
-            {
-                Console.WriteLine((char)('A' + kolona) + ":");
-                for (int red = 0; red < 4; red++)
-                {
-                    if (OtvorenaPolja[kolona][red])
-                    {
-                        Console.WriteLine($" {red + 1}: {Kolone[kolona][red]}");
-                    }
-                    else
-                    {
-                        Console.WriteLine($" {red + 1}: ???");
-                    }
-                }
-                Console.WriteLine($" {Kolone[kolona][4]}: {(OtvorenaPolja[kolona][4] ? Kolone[kolona][4] : "???")}");
-            }
-            Console.WriteLine($"Konačno rešenje: {(OtvorenaPolja.All(k => k.All(o => o)) ? KonacnoResenje : "???")}");
+            Console.WriteLine($" {Kolone[kolona][4]}: {(OtvorenaPolja[kolona][4] ? Kolone[kolona][4] : "???")}");
         }
-            */
+        Console.WriteLine($"Konačno rešenje: {(OtvorenaPolja.All(k => k.All(o => o)) ? KonacnoResenje : "???")}");
+    }
+        */
 
 
-        }
     }
 }
+

@@ -154,8 +154,32 @@ namespace Klijent
                                     Console.WriteLine(linija); // Prikaz svake linije stanja igre
                                 }
 
-                                // Čekaj unos od korisnika
                                 Console.Write("\nUnesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/resenja (K: odgovor): ");
+                                string unos = Console.ReadLine();
+
+                                // Pošalji unos serveru
+                                writer.WriteLine(unos);
+
+                                // Ako je unos "izlaz", prekid igre
+                                if (unos.Equals("izlaz", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Console.WriteLine("Napustili ste igru.");
+                                    return;
+                                }
+
+                                // Primi odgovor servera i prikaži ga
+                                Console.WriteLine("\nOdgovor servera:");
+                              
+                                while ((linija = reader.ReadLine()) != null && linija != "END")
+                                {
+                                    Console.WriteLine(linija);
+                                }
+
+
+
+
+                                // Čekaj unos od korisnika
+                                /*Console.Write("\nUnesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/resenja (K: odgovor): ");
                                 string unos = Console.ReadLine();
 
                                 // Pošalji unos serveru
@@ -180,7 +204,7 @@ namespace Klijent
                                 {
                                     Console.WriteLine("\nIgra je završena!");
                                     break;
-                                }
+                                }  */
 
                                 /*
                                 // Primi kompletno stanje igre od servera
