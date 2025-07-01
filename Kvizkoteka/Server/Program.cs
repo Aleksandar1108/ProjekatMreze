@@ -6,25 +6,21 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Kvizkoteka;
 using System.IO;
 
 namespace Server
 {
     public class Program
     {
-        private static Socket udpSocket; // UDP socket
-        private static Socket tcpSocket; // TCP socket
-        private static Dictionary<int, Igrac> igraci; // Skladisti informacije o igracima
-        private static Dictionary<int, List<string>> igrePoIgracima; // Skladisti igre po ID-ovima igraca
-        private static int playerIdCounter = 1; // Brojac ID-a igraca
+        private static Socket udpSocket;
+        private static Socket tcpSocket;
+        private static Dictionary<int, Igrac> igraci;
+        private static Dictionary<int, List<string>> igrePoIgracima;
+        private static Dictionary<int, int> ukupniPoeniPoIgracima = new Dictionary<int, int>(); // NOVO - čuva ukupne poene
+        private static int playerIdCounter = 1;
 
         static void Main(string[] args)
         {
-
-
-
-
             // Pokretanje UDP soketa
             udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             udpSocket.Bind(new IPEndPoint(IPAddress.Any, 5000));
@@ -39,42 +35,19 @@ namespace Server
 
             Console.WriteLine("Server pokrenut...");
 
-
             _ = Task.Run(() => HandleUdpRequests());
 
             while (true)
             {
-                Socket clientSocket = tcpSocket.Accept(); // Sinhrono prihvatanje klijenta
-                Task.Run(() => HandleClient(clientSocket)); // Pokretanje zadatka za svakog klijenta
+                Socket clientSocket = tcpSocket.Accept();
+                Task.Run(() => HandleClient(clientSocket));
             }
-
-            // Pokretanje UDP niti
-            /* Thread udpThread = new Thread(() =>
-             {
-                 HandleUdpRequests();
-             });
-             udpThread.Start();
-
-             // Pokretanje TCP niti
-             Thread tcpThread = new Thread(() =>
-             {
-                 while (true)
-                 {
-                     Socket clientSocket = tcpSocket.Accept();
-                     Thread clientThread = new Thread(() =>
-                     {
-                         HandleClient(clientSocket);
-                     });
-                     clientThread.Start();
-                 }
-             });
-         
-             //tcpThread.Start();*/
         }
 
         private static void HandleUdpRequests()
         {
             byte[] buffer = new byte[1024];
+
             while (true)
             {
                 EndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
@@ -108,8 +81,11 @@ namespace Server
                         Id = playerIdCounter++,
                         ImeNadimak = name
                     };
+
                     igraci[igrac.Id] = igrac;
                     igrePoIgracima[igrac.Id] = new List<string>(requestedGames);
+
+                    Console.WriteLine($"Registrovan igrac: {name} (ID: {igrac.Id}) - Igre: {string.Join(", ", requestedGames)}");
 
                     string response = $"TCP INFO: {GetLocalIpAddress()}:{((IPEndPoint)tcpSocket.LocalEndPoint).Port}";
                     udpSocket.SendTo(Encoding.UTF8.GetBytes(response), remoteEndPoint);
@@ -133,39 +109,50 @@ namespace Server
                 }
 
                 Igrac igrac = igraci[playerId];
-                bool isTrainingGame = igrePoIgracima[playerId].Contains("as");
+                Console.WriteLine($"Klijent povezan: {igrac.ImeNadimak} (ID: {playerId})");
 
-                string welcomeMessage = isTrainingGame
-                    ? $"Dobrodošli u trening igru kviza Kviskoteka, današnji takmičar je {igrac.ImeNadimak}"
-                    : $"Dobrodošli u igru kviza Kviskoteka, današnji takmičar je {igrac.ImeNadimak}";
-
+                string welcomeMessage = $"Dobrodošli u igru kviza Kviskoteka, današnji takmičar je {igrac.ImeNadimak}";
                 writer.WriteLine(welcomeMessage);
+
                 writer.WriteLine("Unesite START da biste započeli igru.");
 
                 string startMessage = reader.ReadLine()?.Trim();
+
                 if (startMessage == "START")
                 {
                     List<string> igreZaIgraca = igrePoIgracima[playerId];
-                    int totalPoints = 0;
 
+                    // Inicijalizuj ukupne poene za igrača ako ne postoje
+                    if (!ukupniPoeniPoIgracima.ContainsKey(playerId))
+                    {
+                        ukupniPoeniPoIgracima[playerId] = 0;
+                    }
+
+                    int ukupniPoeni = ukupniPoeniPoIgracima[playerId]; // Učitaj postojeće poene
+
+                    Console.WriteLine($"Igrac {igrac.ImeNadimak} počinje sa {ukupniPoeni} poena");
+
+                    // Anagram igra
                     if (igreZaIgraca.Contains("an"))
                     {
                         Anagram game = new Anagram();
                         game.UcitajRec("words.txt");
                         string scrambledWord = game.GenerisiAnagram();
-
                         writer.WriteLine($"Pomešana slova: {scrambledWord}");
-                        string clientAnagram = reader.ReadLine()?.Trim();
 
+                        string clientAnagram = reader.ReadLine()?.Trim();
                         if (!string.IsNullOrEmpty(clientAnagram))
                         {
                             game.PredloženAnagram = clientAnagram;
                             if (game.ProveriAnagram())
                             {
                                 int points = game.IzracunajPoene();
-                                totalPoints += points;
+                                ukupniPoeni += points; // Dodaj na ukupne poene
+                                ukupniPoeniPoIgracima[playerId] = ukupniPoeni; // Sačuvaj
+
                                 writer.WriteLine($"Tačno! Osvojili ste {points} poena.");
                                 writer.WriteLine(points);
+                                Console.WriteLine($"Igrac {igrac.ImeNadimak} - Anagram: +{points} poena, ukupno: {ukupniPoeni}");
                             }
                             else
                             {
@@ -174,13 +161,14 @@ namespace Server
                             }
                         }
                     }
-                    
 
+                    // Pitanja i odgovori
                     if (igreZaIgraca.Contains("po"))
                     {
                         PitanjaIOdgovori game = new PitanjaIOdgovori();
                         game.UcitajPitanja();
                         List<bool> prethodniOdgovori = new List<bool>();
+                        int poeniPitanja = 0; // Lokalni brojač za ovu igru
 
                         for (int i = 0; i < 10; i++)
                         {
@@ -191,18 +179,15 @@ namespace Server
                             }
 
                             writer.WriteLine($"Pitanje {i + 1}: {game.TekucePitanje}");
-                            
-
                             string clientAnswer = reader.ReadLine()?.Trim().ToLower();
 
                             if (clientAnswer == "a" || clientAnswer == "b")
                             {
                                 bool isCorrect = game.ProveriOdgovor(clientAnswer);
-
-                                // Ako je odgovor tačan (isCorrect je true)
                                 if (isCorrect)
                                 {
-                                    totalPoints += 4; // Dodajemo 4 poena
+                                    poeniPitanja += 4;
+                                    ukupniPoeni += 4; // Dodaj na ukupne poene
                                     writer.WriteLine("Tačno! Osvojili ste 4 poena.");
                                 }
                                 else
@@ -216,162 +201,88 @@ namespace Server
                             }
                         }
 
-                        writer.WriteLine($"Ukupno poena: {totalPoints}");
+                        ukupniPoeniPoIgracima[playerId] = ukupniPoeni; // Sačuvaj ukupne poene
+                        writer.WriteLine($"Ukupno poena iz pitanja: {poeniPitanja}");
+                        writer.WriteLine($"Vaši ukupni poeni: {ukupniPoeni}");
+                        Console.WriteLine($"Igrac {igrac.ImeNadimak} - Pitanja: +{poeniPitanja} poena, ukupno: {ukupniPoeni}");
                     }
+
+                    // Asocijacije
                     if (igreZaIgraca.Contains("as"))
                     {
-
+                        Console.WriteLine($"Pokretanje Asocijacije igre za {igrac.ImeNadimak}");
                         Asocijacije asocijacije = new Asocijacije();
-                        int brojPokusaja = 0;
-                        const int maxPokusaja = 5;
                         bool krajIgre = false;
+                        int poeniPredAsocijacije = ukupniPoeni; // Zapamti poene pre asocijacija
 
-                        // Početni prikaz stanja igre
-                        string stanje = asocijacije.PrikaziAsocijaciju();
-                        foreach (string linija in stanje.Split('\n'))
+                        while (!krajIgre)
                         {
-                            writer.WriteLine(linija);
-                        }
-                        writer.WriteLine("END");
-
-
-
-                        while (true)
-                        {
-                            string unos = reader.ReadLine();
-                            if (unos == null) break;
-
-                            string odgovor = asocijacije.OtvoriPolje(unos);
-
-                            // Pošalji redove odgovora liniju po liniju
-                            foreach (var linija in odgovor.Split('\n'))
+                            // Pošalji trenutno stanje igre
+                            string trenutnoStanje = asocijacije.PrikaziAsocijaciju();
+                            foreach (string linija in trenutnoStanje.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries))
                             {
-                                writer.WriteLine(linija.TrimEnd());
+                                writer.WriteLine(linija);
                             }
-
                             writer.WriteLine("END");
-                            writer.Flush();
 
-                            if (asocijacije.DaLiJeKraj())
+                            // Čekaj unos od klijenta
+                            string unos = reader.ReadLine();
+                            if (string.IsNullOrEmpty(unos))
                             {
-                                writer.WriteLine("Kraj igre");
+                                Console.WriteLine("Klijent je prekinuo konekciju");
+                                break;
+                            }
+
+                            Console.WriteLine($"Primljen unos od {igrac.ImeNadimak}: {unos}");
+
+                            if (unos.Equals("izlaz", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // Dodaj poene iz asocijacija na ukupne poene
+                                int poeniAsocijacije = asocijacije.UkupniBodovi;
+                                ukupniPoeni = poeniPredAsocijacije + poeniAsocijacije;
+                                ukupniPoeniPoIgracima[playerId] = ukupniPoeni;
+
+                                writer.WriteLine("Napustili ste igru.");
+                                writer.WriteLine($"Poeni iz asocijacija: {poeniAsocijacije}");
+                                writer.WriteLine($"Vaši ukupni poeni: {ukupniPoeni}");
                                 writer.WriteLine("END");
-                                writer.Flush();
-                                break;
-                            }
-                        }
-
-
-
-                        //Asocijacije igra = new Asocijacije();
-                        //int ukupnoPoena = 0;
-
-                        //while (true)
-                        /*{
-                            // Prikazujemo trenutno stanje asocijacije
-                            writer.WriteLine($"\nTrenutno stanje: \n{igra.PrikaziAsocijaciju()}");
-                            writer.WriteLine("Unesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/rešenja (K: odgovor).");
-
-                            string unos = reader.ReadLine()?.Trim(); // Čeka se unos od korisnika
-
-                            if (string.IsNullOrEmpty(unos))
-                            {
-                                writer.WriteLine("Nevalidan unos. Pokušajte ponovo.");
-                                continue;
-                            }
-
-                            // Obraditi unos i proveriti poene
-                            int poeni = igra.OtvoriPolje(unos);
-                            ukupnoPoena += poeni;
-
-                            // Provera da li su sva polja otvorena
-                            if (igra.OtvorenaPolja.All(k => k.All(o => o)))
-                            {
-                                writer.WriteLine($"Čestitamo! Rešili ste asocijaciju. Ukupno poena: {ukupnoPoena}");
+                                Console.WriteLine($"Igrac {igrac.ImeNadimak} - Asocijacije: +{poeniAsocijacije} poena, ukupno: {ukupniPoeni}");
                                 break;
                             }
 
-                            if (poeni > 0)
+                            // Obradi unos
+                            var (poruka, bodovi) = asocijacije.OtvoriPolje(unos);
+
+                            // Pošalji poruku o rezultatu
+                            writer.WriteLine(poruka);
+                            if (bodovi > 0)
                             {
-                                writer.WriteLine($"Osvojili ste {poeni} poena.");
+                                writer.WriteLine($"💰 Bodovi iz asocijacija: {asocijacije.UkupniBodovi}");
+                                writer.WriteLine($"💰 Vaši ukupni poeni: {poeniPredAsocijacije + asocijacije.UkupniBodovi}");
                             }
-                            else
+                            writer.WriteLine("END");
+
+                            // Proveri da li je igra završena
+                            if (asocijacije.JeIgraZavrsena())
                             {
-                                writer.WriteLine("Netačan odgovor. Pokušajte ponovo.");
+                                // Dodaj poene iz asocijacija na ukupne poene
+                                int poeniAsocijacije = asocijacije.UkupniBodovi;
+                                ukupniPoeni = poeniPredAsocijacije + poeniAsocijacije;
+                                ukupniPoeniPoIgracima[playerId] = ukupniPoeni;
+
+                                writer.WriteLine(" Čestitamo! Rešili ste celu asocijaciju!");
+                                writer.WriteLine($" Poeni iz asocijacija: {poeniAsocijacije}");
+                                writer.WriteLine($" FINALNI REZULTAT: {ukupniPoeni} UKUPNIH BODOVA! ");
+                                writer.WriteLine("END");
+                                krajIgre = true;
+                                Console.WriteLine($"{igrac.ImeNadimak} je završio Asocijacije igru sa {poeniAsocijacije} bodova iz asocijacija, ukupno: {ukupniPoeni}");
                             }
-
-                            /*
-                            writer.WriteLine($"\nTrenutno stanje: \n{igra.PrikaziAsocijaciju()}");
-                            writer.WriteLine("Unesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/rešenja (K: odgovor).");
-
-                            string unos = reader.ReadLine()?.Trim();
-
-                            if (string.IsNullOrEmpty(unos))
-                            {
-                                writer.WriteLine("Nevalidan unos. Pokušajte ponovo.");
-                                continue;
-                            }
-
-                            // Obraditi unos i proveriti poene
-                            int poeni = igra.OtvoriPolje(unos);
-                            ukupnoPoena += poeni;
-
-                            // Provera da li su sva polja otvorena
-                            if (igra.OtvorenaPolja.All(k => k.All(o => o)))
-                            {
-                                writer.WriteLine($"Čestitamo! Rešili ste asocijaciju. Ukupno poena: {ukupnoPoena}");
-                                break;
-                            }
-
-                            if (poeni > 0)
-                            {
-                                writer.WriteLine($"Osvojili ste {poeni} poena.");
-                            }
-                            else
-                            {
-                                writer.WriteLine("Netačan odgovor. Pokušajte ponovo.");
-                            } 
-                            */
-
-
-                        /*
-                        // Prikazujemo trenutno stanje asocijacije
-                        writer.WriteLine("Trenutno stanje asocijacije:");
-                        igra.PrikaziAsocijaciju();
-
-                        // Tražimo unos od igrača
-                        writer.WriteLine("Unesite otvaranje (npr. A1, B2) ili pokušajte rešenje kolone/rešenja (K: odgovor).");
-                        string unos = reader.ReadLine()?.Trim();
-
-                        if (string.IsNullOrEmpty(unos))
-                        {
-                            writer.WriteLine("Nevalidan unos. Pokušajte ponovo.");
-                            continue;
                         }
-
-                        // Obradimo unos i proverimo poene
-                        int poeni = igra.OtvoriPolje(unos);
-                        ukupnoPoena += poeni;
-
-                        // Ako je asocijacija rešena, izlazimo iz petlje
-                        if (igra.OtvorenaPolja.All(k => k.All(o => o)))
-                        {
-                            writer.WriteLine($"Čestitamo! Rešili ste asocijaciju. Ukupno poena: {ukupnoPoena}");
-                            break; // Završen je deo igre za asocijacije
-                        }
-
-                        // Ako su svi polja otključana, obaveštavamo igrača
-                        if (poeni > 0)
-                        {
-                            writer.WriteLine($"Osvojili ste {poeni} poena.");
-                        }
-                        else
-                        {
-                            writer.WriteLine("Netačan odgovor. Pokušajte ponovo.");
-                        } */
-                        //}
-
                     }
+
+                    // Na kraju svih igara, prikaži finalne rezultate
+                    writer.WriteLine($"\n🎯 FINALNI REZULTAT ZA {igrac.ImeNadimak.ToUpper()}: {ukupniPoeniPoIgracima[playerId]} UKUPNIH BODOVA! 🎯");
+                    Console.WriteLine($"=== FINALNI REZULTAT === {igrac.ImeNadimak}: {ukupniPoeniPoIgracima[playerId]} ukupnih bodova");
                 }
                 else
                 {
@@ -382,8 +293,13 @@ namespace Server
             {
                 Console.WriteLine($"Greška u komunikaciji sa klijentom: {ex.Message}");
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Neočekivana greška: {ex.Message}");
+            }
             finally
             {
+                Console.WriteLine("Zatvaranje konekcije sa klijentom");
                 clientSocket.Close();
             }
         }
@@ -399,5 +315,11 @@ namespace Server
             }
             return "127.0.0.1";
         }
+    }
+
+    public class Igrac
+    {
+        public int Id { get; set; }
+        public string ImeNadimak { get; set; }
     }
 }

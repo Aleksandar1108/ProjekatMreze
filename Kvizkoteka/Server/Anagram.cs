@@ -7,19 +7,18 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    public  class Anagram
+    public class Anagram
     {
-        public string RecOdKojeSePraviAnagram { get; set; } 
-        public string PredloženAnagram { get; set; } 
+        public string RecOdKojeSePraviAnagram { get; set; }
+        public string PredloženAnagram { get; set; }
 
-        
         public void UcitajRec(string fileName)
         {
             try
             {
                 var lines = File.ReadAllLines(fileName);
                 var random = new Random();
-                
+
                 RecOdKojeSePraviAnagram = lines[random.Next(lines.Length)];
             }
             catch (Exception ex)
@@ -28,13 +27,11 @@ namespace Server
             }
         }
 
-        
         public string GenerisiAnagram()
         {
             // Podela originalne reci na reci
             string[] words = RecOdKojeSePraviAnagram.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             Random rand = new Random();
-
             List<string> scrambledWords = new List<string>();
 
             foreach (var word in words)
@@ -49,7 +46,6 @@ namespace Server
                     characters[j] = temp;
                 }
 
-              
                 scrambledWords.Add(new string(characters));
             }
 
@@ -57,39 +53,30 @@ namespace Server
             return string.Join(" ", scrambledWords);
         }
 
-        
         public bool ProveriAnagram()
         {
-            
-            var originalSorted = string.Concat(RecOdKojeSePraviAnagram.OrderBy(c => c));
-            var predlozenSorted = string.Concat(PredloženAnagram.OrderBy(c => c));
+            // ISPRAVKA: Proverava da li je predloženi odgovor IDENTIČAN originalnoj reči
+            // Uklanjanje razmaka i pretvaranje u mala slova za poređenje
+            string originalClean = RecOdKojeSePraviAnagram.Replace(" ", "").ToLower();
+            string predlozenClean = PredloženAnagram.Replace(" ", "").ToLower();
 
-            
-            return originalSorted == predlozenSorted;
+            // Direktno poređenje - mora biti identično
+            return originalClean == predlozenClean;
         }
-
 
         public int IzracunajPoene()
         {
-            // Uklanjanje praznina iz originalne i predložene reči
-            string originalNoSpaces = RecOdKojeSePraviAnagram.Replace(" ", "").ToLower();
-            string predlozenNoSpaces = PredloženAnagram.Replace(" ", "").ToLower();
-
-            // Sortiranje karaktera za proveru anagrama
-            var originalSorted = string.Concat(originalNoSpaces.OrderBy(c => c));
-            var predlozenSorted = string.Concat(predlozenNoSpaces.OrderBy(c => c));
-
-            // Provera da li su ceo original i predloženi anagram identični
-            if (originalSorted == predlozenSorted)
+            // ISPRAVKA: Koristi novu logiku iz ProveriAnagram metode
+            if (ProveriAnagram())
             {
                 // Ako je tačan, dodeli bodove na osnovu broja slova u originalnoj reči bez razmaka
+                string originalNoSpaces = RecOdKojeSePraviAnagram.Replace(" ", "").ToLower();
                 return originalNoSpaces.Length;
             }
 
             // Ako nije tačan, nema bodova
             return 0;
         }
-
 
         private bool IsWordAnagram(string originalWord, string predlozenaWord)
         {
@@ -98,7 +85,6 @@ namespace Server
 
             // Kreiraj frekvencijski brojnik za karaktere u originalnoj reči
             var charCount = new Dictionary<char, int>();
-
             foreach (var c in originalWord)
             {
                 if (charCount.ContainsKey(c))
@@ -112,6 +98,7 @@ namespace Server
             {
                 if (!charCount.ContainsKey(c) || charCount[c] == 0)
                     return false; // Slovo ne postoji ili je višak
+
                 charCount[c]--;
             }
 
