@@ -18,7 +18,7 @@ namespace Klijent
             Console.Write("Unesite igre koje želite da igrate (odvojene zarezima): ");
             string igre = Console.ReadLine();
 
-            // UDP deo
+            /*// UDP deo
             UdpClient udpClient = new UdpClient();
             IPEndPoint serverEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
             string prijava = $"PRIJAVA: {ime}, {igre}";
@@ -28,6 +28,22 @@ namespace Klijent
 
             // Prijem odgovora sa servera
             string udpResponse = Encoding.UTF8.GetString(udpClient.Receive(ref serverEndpoint));
+            Console.WriteLine("Odgovor servera: " + udpResponse);*/
+
+            Socket udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            IPEndPoint serverEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
+            EndPoint remoteEndpoint = (EndPoint)serverEndpoint;
+
+            string prijava = $"PRIJAVA: {ime}, {igre}";
+            byte[] prijavaBytes = Encoding.UTF8.GetBytes(prijava);
+
+            // Slanje prijave serveru
+            udpSocket.SendTo(prijavaBytes, remoteEndpoint);
+
+            // Prijem odgovora sa servera
+            byte[] buffer = new byte[1024];
+            int receivedLength = udpSocket.ReceiveFrom(buffer, ref remoteEndpoint);
+            string udpResponse = Encoding.UTF8.GetString(buffer, 0, receivedLength);
             Console.WriteLine("Odgovor servera: " + udpResponse);
 
             // Obrada TCP informacija
