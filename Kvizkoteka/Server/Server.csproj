@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Anagram.cs" />
     <Compile Include="Asocijacije.cs" />
+    <Compile Include="Igrac.cs" />
     <Compile Include="PitanjaIOdgovori.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

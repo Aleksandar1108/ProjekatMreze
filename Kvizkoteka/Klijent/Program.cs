@@ -18,21 +18,10 @@ namespace Klijent
             Console.Write("Unesite igre koje želite da igrate (odvojene zarezima): ");
             string igre = Console.ReadLine();
 
-            /*// UDP deo
-            UdpClient udpClient = new UdpClient();
-            IPEndPoint serverEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
-            string prijava = $"PRIJAVA: {ime}, {igre}";
-
-            // Slanje prijave serveru
-            udpClient.Send(Encoding.UTF8.GetBytes(prijava), prijava.Length, serverEndpoint);
-
-            // Prijem odgovora sa servera
-            string udpResponse = Encoding.UTF8.GetString(udpClient.Receive(ref serverEndpoint));
-            Console.WriteLine("Odgovor servera: " + udpResponse);*/
-
             Socket udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             IPEndPoint serverEndpoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 5000);
             EndPoint remoteEndpoint = (EndPoint)serverEndpoint;
+
 
             string prijava = $"PRIJAVA: {ime}, {igre}";
             byte[] prijavaBytes = Encoding.UTF8.GetBytes(prijava);
@@ -81,6 +70,11 @@ namespace Klijent
 
                         if (igre.Contains("an"))
                         {
+                            string pitanjeKviska = reader.ReadLine();
+                            Console.WriteLine(pitanjeKviska);
+
+                            string odgovorKviska = Console.ReadLine();
+                            writer.WriteLine(odgovorKviska);
                             // Čekanje na pomešana slova od servera
                             string mixedLetters = reader.ReadLine();
                             Console.WriteLine("" + mixedLetters);
@@ -90,20 +84,39 @@ namespace Klijent
                             string anagram = Console.ReadLine();
                             writer.WriteLine(anagram);
 
-                            // Prikazivanje rezultata
-                            string result = reader.ReadLine();
-                            Console.WriteLine("Odgovor servera: " + result);
 
-                            if (int.TryParse(reader.ReadLine(), out int anagramPoints))
+                            string line;
+                            while ((line = reader.ReadLine()) != null)
                             {
-                                totalPoints += anagramPoints;
-                                Console.WriteLine($"Poeni osvojeni u anagramu: {anagramPoints}");
+                                Console.WriteLine("Odgovor servera: " + line);
+
+                                // Ako je linija broj, to su poeni
+                                if (int.TryParse(line, out int anagramPoints))
+                                {
+                                    totalPoints += anagramPoints;
+                                    Console.WriteLine($"Poeni osvojeni u anagramu: {anagramPoints}");
+                                    break; // Izađi iz petlje kada nađeš poene
+                                }
                             }
+                            // Prikazivanje rezultata
+                            // string result = reader.ReadLine();
+                            //Console.WriteLine("Odgovor servera: " + result);
+
+                           // if (int.TryParse(reader.ReadLine(), out int anagramPoints))
+                            //{
+                              //  totalPoints += anagramPoints;
+                                //Console.WriteLine($"Poeni osvojeni u anagramu: {anagramPoints}");
+                            //}
 
                         }
 
                         if (igre.Contains("po"))
                         {
+                            string pitanjeKviska = reader.ReadLine();
+                            Console.WriteLine(pitanjeKviska);
+
+                            string odgovorKviska = Console.ReadLine();
+                            writer.WriteLine(odgovorKviska);
                             // Ako je igra "Pitanja i odgovori", čeka pitanja i odgovara
                             Console.WriteLine("Odgovorite na sledeće pitanje: ");
                             for (int i = 0; i < 10; i++) // Postavljanje 10 pitanja
@@ -114,6 +127,15 @@ namespace Klijent
                                 string pitanje = reader.ReadLine(); // Pitanje od servera
                                 if (pitanje == "Nema više pitanja.") break;
 
+                                // Ako pitanje sadrži "KVISKA", to nije pitanje već poruka - čitaj pravo pitanje
+                                if (pitanje.Contains("KVISKA"))
+                                {
+                                    Console.WriteLine(pitanje); // Prikaži kvisko poruku
+                                    pitanje = reader.ReadLine(); // Čitaj pravo pitanje
+                                    if (pitanje == "Nema više pitanja.") break;
+                                }
+
+
                                 // Prikazivanje pitanja i opcija
                                 Console.WriteLine(pitanje); // Ispisivanje pitanja
                                 Console.WriteLine("a) Tačno");
@@ -122,9 +144,17 @@ namespace Klijent
                                 string odgovor = Console.ReadLine(); // Unos odgovora (A ili B)
                                 writer.WriteLine(odgovor);
 
+
+
+
                                 // Čitanje rezultata od servera
                                 string odgovorServera = reader.ReadLine();
                                 Console.WriteLine(odgovorServera);
+
+
+
+
+
 
                                 // Ako je odgovor tačan, dodaj 4 poena
                                 if (odgovorServera.Contains("Tačno"))
@@ -145,10 +175,18 @@ namespace Klijent
                             // Prikazivanje ukupnog broja poena
                             Console.WriteLine($"Ukupno poena: {totalPoints}");
 
+
+
                         }
 
                         if (igre.Contains("as"))
                         {
+                            string pitanjeKviska = reader.ReadLine();
+                            Console.WriteLine(pitanjeKviska);
+
+                            string odgovorKviska = Console.ReadLine();
+                            writer.WriteLine(odgovorKviska);
+
                             Console.WriteLine(" --- ASOCIJACIJE --- ");
                             Console.WriteLine(" SISTEM BODOVANJA:");
                             Console.WriteLine("   • Rešavanje kolone: (broj neotvorenih polja + 2) bodova");

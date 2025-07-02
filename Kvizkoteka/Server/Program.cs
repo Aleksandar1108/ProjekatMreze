@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using System.Reflection;
 
 namespace Server
 {
@@ -130,11 +131,18 @@ namespace Server
 
                     int ukupniPoeni = ukupniPoeniPoIgracima[playerId]; // Učitaj postojeće poene
 
-                    Console.WriteLine($"Igrac {igrac.ImeNadimak} počinje sa {ukupniPoeni} poena");
-
+                  
                     // Anagram igra
                     if (igreZaIgraca.Contains("an"))
                     {
+                        igrac.UlozenKvisko = false; 
+
+                        Console.WriteLine($"Igrac {igrac.ImeNadimak} počinje sa {ukupniPoeni} poena");
+                        writer.WriteLine("Da li želite da uložite KVISKA za ovu igru? (da/ne)");
+                        string odgovorKvisko = reader.ReadLine()?.Trim().ToLower();
+                        igrac.UlozenKvisko = (odgovorKvisko == "da");
+                        
+
                         Anagram game = new Anagram();
                         game.UcitajRec("words.txt");
                         string scrambledWord = game.GenerisiAnagram();
@@ -146,7 +154,14 @@ namespace Server
                             game.PredloženAnagram = clientAnagram;
                             if (game.ProveriAnagram())
                             {
+                               
                                 int points = game.IzracunajPoene();
+                                if (igrac.UlozenKvisko)
+                                {
+                                    points *= 2;
+                                    igrac.UlozenKvisko = false;
+                                    writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                }
                                 ukupniPoeni += points; // Dodaj na ukupne poene
                                 ukupniPoeniPoIgracima[playerId] = ukupniPoeni; // Sačuvaj
 
@@ -161,10 +176,17 @@ namespace Server
                             }
                         }
                     }
+                   
 
                     // Pitanja i odgovori
                     if (igreZaIgraca.Contains("po"))
                     {
+                        igrac.UlozenKvisko = false;
+
+                        writer.WriteLine("Da li želite da uložite KVISKA za ovu igru? (da/ne)");
+                        string odgovorKvisko = reader.ReadLine()?.Trim().ToLower();
+                        igrac.UlozenKvisko = (odgovorKvisko == "da"); 
+
                         PitanjaIOdgovori game = new PitanjaIOdgovori();
                         game.UcitajPitanja();
                         List<bool> prethodniOdgovori = new List<bool>();
@@ -186,9 +208,22 @@ namespace Server
                                 bool isCorrect = game.ProveriOdgovor(clientAnswer);
                                 if (isCorrect)
                                 {
-                                    poeniPitanja += 4;
-                                    ukupniPoeni += 4; // Dodaj na ukupne poene
-                                    writer.WriteLine("Tačno! Osvojili ste 4 poena.");
+                                    int dobijeni = 4;
+
+                                    if (igrac.UlozenKvisko)
+                                    {
+                                        dobijeni *= 2;
+                                        igrac.UlozenKvisko = false;
+                                        ukupniPoeni += dobijeni;
+                                        writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                    }
+                                    else
+                                    {
+                                        poeniPitanja += 4;
+                                        ukupniPoeni += 4; // Dodaj na ukupne poene
+                                        writer.WriteLine("Tačno! Osvojili ste 4 poena.");
+                                    }
+                                    
                                 }
                                 else
                                 {
@@ -207,9 +242,16 @@ namespace Server
                         Console.WriteLine($"Igrac {igrac.ImeNadimak} - Pitanja: +{poeniPitanja} poena, ukupno: {ukupniPoeni}");
                     }
 
+                    
                     // Asocijacije
                     if (igreZaIgraca.Contains("as"))
                     {
+                        igrac.UlozenKvisko = false;
+                        Console.WriteLine($"Igrac {igrac.ImeNadimak} počinje sa {ukupniPoeni} poena");
+                        writer.WriteLine("Da li želite da uložite KVISKA za ovu igru? (da/ne)");
+                        string odgovorKvisko = reader.ReadLine()?.Trim().ToLower();
+                        igrac.UlozenKvisko = (odgovorKvisko == "da");
+
                         Console.WriteLine($"Pokretanje Asocijacije igre za {igrac.ImeNadimak}");
                         Asocijacije asocijacije = new Asocijacije();
                         bool krajIgre = false;
@@ -267,6 +309,12 @@ namespace Server
                             {
                                 // Dodaj poene iz asocijacija na ukupne poene
                                 int poeniAsocijacije = asocijacije.UkupniBodovi;
+                                if (igrac.UlozenKvisko)
+                                {
+                                    poeniAsocijacije *= 2;
+                                    igrac.UlozenKvisko= false;
+                                    writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                }
                                 ukupniPoeni = poeniPredAsocijacije + poeniAsocijacije;
                                 ukupniPoeniPoIgracima[playerId] = ukupniPoeni;
 
@@ -317,9 +365,5 @@ namespace Server
         }
     }
 
-    public class Igrac
-    {
-        public int Id { get; set; }
-        public string ImeNadimak { get; set; }
-    }
+   
 }
