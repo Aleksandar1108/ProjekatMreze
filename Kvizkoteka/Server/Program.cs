@@ -207,23 +207,10 @@ namespace Server
                             {
                                 bool isCorrect = game.ProveriOdgovor(clientAnswer);
                                 if (isCorrect)
-                                {
-                                    int dobijeni = 4;
-
-                                    if (igrac.UlozenKvisko)
-                                    {
-                                        dobijeni *= 2;
-                                        igrac.UlozenKvisko = false;
-                                        ukupniPoeni += dobijeni;
-                                        writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
-                                    }
-                                    else
-                                    {
+                                {   
                                         poeniPitanja += 4;
-                                        ukupniPoeni += 4; // Dodaj na ukupne poene
-                                        writer.WriteLine("Tačno! Osvojili ste 4 poena.");
-                                    }
-                                    
+                                      //  ukupniPoeni += 4; // Dodaj na ukupne poene
+                                        writer.WriteLine("Tačno! Osvojili ste 4 poena.");   
                                 }
                                 else
                                 {
@@ -234,6 +221,19 @@ namespace Server
                             {
                                 writer.WriteLine("Neispravan odgovor. Pokušajte sa 'a' ili 'b'.");
                             }
+                        }
+
+                        if (igrac.UlozenKvisko)
+                        {
+                             poeniPitanja *= 2;
+                             ukupniPoeni +=poeniPitanja ;
+                            
+                            igrac.UlozenKvisko = false;
+                            
+                            writer.WriteLine("Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                            writer.WriteLine($"Ukupno osvojenih poena: {ukupniPoeni}");
+                            ukupniPoeniPoIgracima[playerId] = ukupniPoeni;
+
                         }
 
                         ukupniPoeniPoIgracima[playerId] = ukupniPoeni; // Sačuvaj ukupne poene
@@ -313,7 +313,7 @@ namespace Server
                                 {
                                     poeniAsocijacije *= 2;
                                     igrac.UlozenKvisko= false;
-                                    writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                    writer.WriteLine(" Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
                                 }
                                 ukupniPoeni = poeniPredAsocijacije + poeniAsocijacije;
                                 ukupniPoeniPoIgracima[playerId] = ukupniPoeni;

@@ -114,78 +114,144 @@ namespace Klijent
                         {
                             string pitanjeKviska = reader.ReadLine();
                             Console.WriteLine(pitanjeKviska);
-
                             string odgovorKviska = Console.ReadLine();
                             writer.WriteLine(odgovorKviska);
-                            // Ako je igra "Pitanja i odgovori", čeka pitanja i odgovara
+
                             Console.WriteLine("Odgovorite na sledeće pitanje: ");
-                            for (int i = 0; i < 10; i++) // Postavljanje 10 pitanja
+
+                            // Reset totalPoints logike - server će poslati tačne poene
+                            int poeniPredPitanja = totalPoints;
+
+                            for (int i = 0; i < 10; i++)
                             {
-
-
-
-                                string pitanje = reader.ReadLine(); // Pitanje od servera
+                                string pitanje = reader.ReadLine();
                                 if (pitanje == "Nema više pitanja.") break;
 
-                                // Ako pitanje sadrži "KVISKA", to nije pitanje već poruka - čitaj pravo pitanje
-                                if (pitanje.Contains("KVISKA"))
-                                {
-                                    Console.WriteLine(pitanje); // Prikaži kvisko poruku
-                                    pitanje = reader.ReadLine(); // Čitaj pravo pitanje
-                                    if (pitanje == "Nema više pitanja.") break;
-                                }
-
-
-                                // Prikazivanje pitanja i opcija
-                                Console.WriteLine(pitanje); // Ispisivanje pitanja
+                                Console.WriteLine(pitanje);
                                 Console.WriteLine("a) Tačno");
                                 Console.WriteLine("b) Netačno");
 
-                                string odgovor = Console.ReadLine(); // Unos odgovora (A ili B)
+                                string odgovor = Console.ReadLine();
                                 writer.WriteLine(odgovor);
 
-
-
-
-                                // Čitanje rezultata od servera
                                 string odgovorServera = reader.ReadLine();
                                 Console.WriteLine(odgovorServera);
 
-
-
-
-
-
-                                // Ako je odgovor tačan, dodaj 4 poena
                                 if (odgovorServera.Contains("Tačno"))
                                 {
-                                    totalPoints += 4; // Dodaj 4 poena za tačan odgovor
+                                    totalPoints += 4;
+                                    Console.WriteLine("Trenutni broj poena: " + totalPoints);
                                 }
                                 else
                                 {
-                                    // Ako nije tačno, poeni ostaju isti
                                     Console.WriteLine("Odgovor je netačan. Poeni ostaju isti.");
+                                    Console.WriteLine("Trenutni broj poena: " + totalPoints);
                                 }
-
-                                // Prikazivanje trenutnih bodova
-                                Console.WriteLine($"Trenutni broj poena: {totalPoints}");
-                                Console.WriteLine(); // Prazna linija za lepu separaciju između pitanja
+                                Console.WriteLine();
                             }
 
+
+                            // ✅ DODATO: Čitanje svih poruka nakon igre
+                            Console.WriteLine("📊 === REZULTATI PITANJA I ODGOVORA ===");
+                            string linija;
+                            while ((linija = reader.ReadLine()) != null)
+                            {
+
+                                if (linija.StartsWith("Da li želite da uložite KVISKA za ovu igru? (da/ne)"))
+                                {
+                                    // Početak sledeće igre - prekidamo petlju da se ne bi pojelo pitanje
+                                    break;
+                                }
+                                Console.WriteLine(linija);
+
+                               
+                            }
+                            Console.WriteLine("📊 === KRAJ PITANJA I ODGOVORA ===\n");
+                            Console.WriteLine(linija); // ovo je "Da li želite da uložite KVISKA..."
+                             odgovorKviska = Console.ReadLine();
+                            writer.WriteLine(odgovorKviska);
+
+
+
+                            // string pitanjeKviska = reader.ReadLine();
+                            //Console.WriteLine(pitanjeKviska);
+
+                            // string odgovorKviska = Console.ReadLine();
+                            //  writer.WriteLine(odgovorKviska);
+                            // Ako je igra "Pitanja i odgovori", čeka pitanja i odgovara
+                            //  Console.WriteLine("Odgovorite na sledeće pitanje: ");
+                            //   for (int i = 0; i < 10; i++) // Postavljanje 10 pitanja
+                            //  {
+
+
+
+                            //  string pitanje = reader.ReadLine(); // Pitanje od servera
+                            //   if (pitanje == "Nema više pitanja.") break;
+
+                            // Ako pitanje sadrži "KVISKA", to nije pitanje već poruka - čitaj pravo pitanje
+                            //  if (pitanje.Contains("KVISKA"))
+                            //  {
+                            //      Console.WriteLine(pitanje); // Prikaži kvisko poruku
+                            //     pitanje = reader.ReadLine(); // Čitaj pravo pitanje
+                            //     if (pitanje == "Nema više pitanja.") break;
+                            //  }
+
+
+                            // Prikazivanje pitanja i opcija
+                            // Console.WriteLine(pitanje); // Ispisivanje pitanja
+                            //  Console.WriteLine("a) Tačno");
+                            //  Console.WriteLine("b) Netačno");
+
+                            //  string odgovor = Console.ReadLine(); // Unos odgovora (A ili B)
+                            //  writer.WriteLine(odgovor);
+
+
+
+
+                            // Čitanje rezultata od servera
+                            //  string odgovorServera = reader.ReadLine();
+                            //  Console.WriteLine(odgovorServera);
+
+
+
+
+
+                            /*  string poeniLinija = reader.ReadLine();
+                              if (int.TryParse(poeniLinija, out int osvojeniPoeni))
+                              {
+                                  totalPoints += osvojeniPoeni;
+                                  Console.WriteLine($"Poeni osvojeni u pitanju: {osvojeniPoeni}");
+                              }*/
+
+                            // Ako je odgovor tačan, dodaj 4 poena
+                            //  if (odgovorServera.Contains("Tačno"))
+                            //   {
+                            //      totalPoints += 4; // Dodaj 4 poena za tačan odgovor
+                            //   }
+                            //   else
+                            //   {
+                            // Ako nije tačno, poeni ostaju isti
+                            //        Console.WriteLine("Odgovor je netačan. Poeni ostaju isti.");
+                            //    }
+
+                            // Prikazivanje trenutnih bodova
+                            // Console.WriteLine($"Trenutni broj poena: {totalPoints}");
+                            // Console.WriteLine(); // Prazna linija za lepu separaciju između pitanja
+                            // }
+
                             // Prikazivanje ukupnog broja poena
-                            Console.WriteLine($"Ukupno poena: {totalPoints}");
 
+                            // Console.WriteLine($"Ukupno poena: {totalPoints}");
 
+                            
 
                         }
 
                         if (igre.Contains("as"))
                         {
-                            string pitanjeKviska = reader.ReadLine();
-                            Console.WriteLine(pitanjeKviska);
+                          
 
-                            string odgovorKviska = Console.ReadLine();
-                            writer.WriteLine(odgovorKviska);
+
 
                             Console.WriteLine(" --- ASOCIJACIJE --- ");
                             Console.WriteLine(" SISTEM BODOVANJA:");
