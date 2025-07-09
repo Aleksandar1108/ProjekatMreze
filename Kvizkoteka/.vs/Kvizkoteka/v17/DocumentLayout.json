@@ -3,16 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|c:\\users\\windows 10\\source\\repos\\projekatmreze\\kvizkoteka\\klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{37E4071F-3F66-40BE-8DFA-151B4885ACA1}|Klijent\\Klijent.csproj|solutionrelative:klijent\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|c:\\users\\windows 10\\source\\repos\\projekatmreze\\kvizkoteka\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\server\\asocijacije.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\asocijacije.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{05F823B6-7142-4B3F-8049-1FC6C2D92370}|Kvizkoteka\\Kvizkoteka.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\kvizkoteka\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{05F823B6-7142-4B3F-8049-1FC6C2D92370}|Kvizkoteka\\Kvizkoteka.csproj|solutionrelative:kvizkoteka\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\server\\pitanjaiodgovori.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -25,10 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\server\\igrac.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\igrac.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\server\\asocijacije.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4F1CF796-9920-4D1B-B632-BCDBAC2E91FC}|Server\\Server.csproj|solutionrelative:server\\asocijacije.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,13 +42,13 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
               "RelativeDocumentMoniker": "Server\\Program.cs",
               "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Program.cs",
               "RelativeToolTip": "Server\\Program.cs",
-              "ViewState": "AQIAAF0BAAAAAAAAAAAqwHABAAABAAAA",
+              "ViewState": "AQIAACwBAAAAAAAAAAAqwDQBAAA4AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-11T15:41:56.093Z",
               "IsPinned": true,
@@ -56,7 +56,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "Igrac.cs",
               "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Igrac.cs",
               "RelativeDocumentMoniker": "Server\\Igrac.cs",
@@ -68,19 +68,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
               "Title": "Asocijacije.cs",
               "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Asocijacije.cs",
               "RelativeDocumentMoniker": "Server\\Asocijacije.cs",
               "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Asocijacije.cs",
               "RelativeToolTip": "Server\\Asocijacije.cs",
-              "ViewState": "AQIAAMkAAAAAAAAAAAAYwOoAAAABAAAA",
+              "ViewState": "AQIAANQAAAAAAAAAAAAuwN4AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-18T13:58:19.268Z"
+              "WhenOpened": "2025-01-18T13:58:19.268Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Kvizkoteka\\Program.cs",
               "RelativeDocumentMoniker": "Kvizkoteka\\Program.cs",
@@ -88,12 +89,11 @@
               "RelativeToolTip": "Kvizkoteka\\Program.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-15T13:19:01.333Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-15T13:19:01.333Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "PitanjaIOdgovori.cs",
               "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\PitanjaIOdgovori.cs",
               "RelativeDocumentMoniker": "Server\\PitanjaIOdgovori.cs",
@@ -111,14 +111,14 @@
               "RelativeDocumentMoniker": "Klijent\\Program.cs",
               "ToolTip": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Klijent\\Program.cs",
               "RelativeToolTip": "Klijent\\Program.cs",
-              "ViewState": "AQIAAPMAAAAAAAAAAAAuwP4AAABGAAAA",
+              "ViewState": "AQIAAIwAAAAAAAAAAAAuwJwAAABOAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-01-11T15:40:20.908Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Anagram.cs",
               "DocumentMoniker": "C:\\Users\\Windows 10\\source\\repos\\ProjekatMreze\\Kvizkoteka\\Server\\Anagram.cs",
               "RelativeDocumentMoniker": "Server\\Anagram.cs",
