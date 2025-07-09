@@ -24,7 +24,6 @@ namespace Server
         {
             udpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             udpSocket.Bind(new IPEndPoint(IPAddress.Any, 5000));
-
             tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             tcpSocket.Bind(new IPEndPoint(IPAddress.Any, 5001));
             tcpSocket.Listen(10);
@@ -33,7 +32,6 @@ namespace Server
             igrePoIgracima = new Dictionary<int, List<string>>();
 
             Console.WriteLine("Server pokrenut...");
-
             _ = Task.Run(() => HandleUdpRequests());
 
             while (true)
@@ -116,6 +114,8 @@ namespace Server
                 string startMessage = reader.ReadLine()?.Trim();
                 if (startMessage == "START")
                 {
+                    Console.WriteLine($"🎮 {igrac.ImeNadimak} je počeo da igra!");
+
                     List<string> igreZaIgraca = igrePoIgracima[playerId];
                     if (!ukupniPoeniPoIgracima.ContainsKey(playerId))
                         ukupniPoeniPoIgracima[playerId] = 0;
@@ -143,8 +143,8 @@ namespace Server
                         Anagram game = new Anagram();
                         game.UcitajRec("words.txt");
                         writer.WriteLine($"Pomešana slova: {game.GenerisiAnagram()}");
-                        string clientAnagram = reader.ReadLine()?.Trim();
 
+                        string clientAnagram = reader.ReadLine()?.Trim();
                         if (!string.IsNullOrEmpty(clientAnagram))
                         {
                             game.PredloženAnagram = clientAnagram;
@@ -155,17 +155,21 @@ namespace Server
                                 {
                                     points *= 2;
                                     igrac.UlozenKvisko = false;
-                                    writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                    writer.WriteLine(" Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
                                 }
                                 ukupniPoeni += points;
                                 ukupniPoeniPoIgracima[playerId] = ukupniPoeni;
                                 writer.WriteLine($"Tačno! Osvojili ste {points} poena.");
                                 writer.WriteLine(points);
+
+                                Console.WriteLine($" {igrac.ImeNadimak} - ANAGRAM: +{points} bodova (ukupno: {ukupniPoeni})");
                             }
                             else
                             {
                                 writer.WriteLine("Netačno. Pokušajte ponovo.");
                                 writer.WriteLine(0);
+
+                                Console.WriteLine($"❌ {igrac.ImeNadimak} - ANAGRAM: netačan odgovor");
                             }
                         }
                     }
@@ -231,6 +235,8 @@ namespace Server
                         ukupniPoeniPoIgracima[playerId] = ukupniPoeni;
                         writer.WriteLine($"Ukupno poena iz pitanja: {poeniPitanja}");
                         writer.WriteLine($"Vaši ukupni poeni: {ukupniPoeni}");
+
+                        Console.WriteLine($" {igrac.ImeNadimak} - PITANJA: +{poeniPitanja} bodova (ukupno: {ukupniPoeni})");
                     }
 
                     // Asocijacije
@@ -277,18 +283,18 @@ namespace Server
                                 writer.WriteLine($"Poeni iz asocijacija: {poeni}");
                                 writer.WriteLine($"Vaši ukupni poeni: {ukupniPoeni}");
                                 writer.WriteLine("END");
+
+                                Console.WriteLine($" {igrac.ImeNadimak} - ASOCIJACIJE: +{poeni} bodova (ukupno: {ukupniPoeni})");
                                 break;
                             }
 
                             var (poruka, bodovi) = asocijacije.OtvoriPolje(unos);
                             writer.WriteLine(poruka);
-
                             if (bodovi > 0)
                             {
-                                writer.WriteLine($"💰 Bodovi iz asocijacija: {asocijacije.UkupniBodovi}");
-                                writer.WriteLine($"💰 Vaši ukupni poeni: {poeniPre + asocijacije.UkupniBodovi}");
+                                writer.WriteLine($" Bodovi iz asocijacija: {asocijacije.UkupniBodovi}");
+                                writer.WriteLine($" Vaši ukupni poeni: {poeniPre + asocijacije.UkupniBodovi}");
                             }
-
                             writer.WriteLine("END");
 
                             // Proveri kraj igre
@@ -298,21 +304,26 @@ namespace Server
                                 if (igrac.UlozenKvisko)
                                 {
                                     poeni *= 2;
-                                    writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                    writer.WriteLine(" Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
                                 }
                                 igrac.UlozenKvisko = false;
                                 ukupniPoeni = poeniPre + poeni;
                                 ukupniPoeniPoIgracima[playerId] = ukupniPoeni;
-                                writer.WriteLine("🎉 Čestitamo! Rešili ste celu asocijaciju!");
-                                writer.WriteLine($"📊 Poeni iz asocijacija: {poeni}");
-                                writer.WriteLine($"🎯 FINALNI REZULTAT: {ukupniPoeni} UKUPNIH BODOVA! 🎯");
+                                writer.WriteLine(" Čestitamo! Rešili ste celu asocijaciju!");
+                                writer.WriteLine($" Poeni iz asocijacija: {poeni}");
+                                writer.WriteLine($" FINALNI REZULTAT: {ukupniPoeni} UKUPNIH BODOVA! ");
                                 writer.WriteLine("END");
+
+                                Console.WriteLine($" {igrac.ImeNadimak} - ASOCIJACIJE: +{poeni} bodova (ukupno: {ukupniPoeni})");
                                 break;
                             }
                         }
                     }
 
-                    writer.WriteLine($"\n🎯 FINALNI REZULTAT ZA {igrac.ImeNadimak.ToUpper()}: {ukupniPoeniPoIgracima[playerId]} UKUPNIH BODOVA! 🎯");
+                    writer.WriteLine($"\n FINALNI REZULTAT ZA {igrac.ImeNadimak.ToUpper()}: {ukupniPoeniPoIgracima[playerId]} UKUPNIH BODOVA! ");
+
+                    // Prikaži sve igrače posle završetka
+                    PrikaziSveIgrace();
                 }
                 else
                 {
@@ -332,6 +343,17 @@ namespace Server
                 Console.WriteLine("Zatvaranje konekcije sa klijentom");
                 clientSocket.Close();
             }
+        }
+
+        private static void PrikaziSveIgrace()
+        {
+            Console.WriteLine("\n=== TRENUTNI REZULTATI ===");
+            foreach (var igrac in ukupniPoeniPoIgracima.OrderByDescending(x => x.Value))
+            {
+                string ime = igraci.ContainsKey(igrac.Key) ? igraci[igrac.Key].ImeNadimak : $"Igrac {igrac.Key}";
+                Console.WriteLine($"{ime}: {igrac.Value} bodova");
+            }
+            Console.WriteLine("==========================\n");
         }
 
         private static string GetLocalIpAddress()
