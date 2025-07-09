@@ -18,7 +18,20 @@ namespace Server
         private static Dictionary<int, Igrac> igraci;
         private static Dictionary<int, List<string>> igrePoIgracima;
         private static Dictionary<int, int> ukupniPoeniPoIgracima = new Dictionary<int, int>();
+        private static Dictionary<int, int> kviskoPoeniPoIgracima = new Dictionary<int, int>(); // NOVA VARIJABLA!
         private static int playerIdCounter = 1;
+        private static int ukupanBrojIgraca = 0;
+        private static int zavrseniIgraci = 0;
+        private static bool anagramPrviZavrsen = false;
+
+        // Brojač grešaka i završetak asocijacija
+        private static int brojGreskaKonacnoResenje = 0;
+        private static readonly int maxGresaka = 5;
+        private static bool asocijacijaZavrsenaDueToErrors = false;
+        private static bool asocijacijaZavrsenaDueToSolution = false;
+        private static string pobednikAsocijacija = "";
+
+        private static readonly object lockObject = new object();
 
         static void Main(string[] args)
         {
@@ -81,6 +94,11 @@ namespace Server
                     igraci[igrac.Id] = igrac;
                     igrePoIgracima[igrac.Id] = new List<string>(requestedGames);
 
+                    lock (lockObject)
+                    {
+                        ukupanBrojIgraca++;
+                    }
+
                     Console.WriteLine($"Registrovan igrac: {name} (ID: {igrac.Id}) - Igre: {string.Join(", ", requestedGames)}");
 
                     string response = $"TCP INFO: {GetLocalIpAddress()}:{((IPEndPoint)tcpSocket.LocalEndPoint).Port}";
@@ -119,6 +137,8 @@ namespace Server
                     List<string> igreZaIgraca = igrePoIgracima[playerId];
                     if (!ukupniPoeniPoIgracima.ContainsKey(playerId))
                         ukupniPoeniPoIgracima[playerId] = 0;
+                    if (!kviskoPoeniPoIgracima.ContainsKey(playerId))
+                        kviskoPoeniPoIgracima[playerId] = 0; // INICIJALIZUJ KVISKO BODOVE
 
                     int ukupniPoeni = ukupniPoeniPoIgracima[playerId];
 
@@ -151,18 +171,43 @@ namespace Server
                             if (game.ProveriAnagram())
                             {
                                 int points = game.IzracunajPoene();
+
+                                // Proveri da li je prvi koji je završio anagram
+                                bool dobijaBonusZaPrvog = false;
+                                lock (lockObject)
+                                {
+                                    if (!anagramPrviZavrsen)
+                                    {
+                                        anagramPrviZavrsen = true;
+                                        dobijaBonusZaPrvog = true;
+                                    }
+                                }
+
+                                // Dodaj bonus za prvog
+                                if (dobijaBonusZaPrvog)
+                                {
+                                    int bonus = (int)(points * 0.1); // 10% bonus
+                                    points += bonus;
+                                    writer.WriteLine($"🎯 PRVI STE ZAVRŠILI ANAGRAM! Bonus: +{bonus} bodova!");
+                                    Console.WriteLine($"🎯 {igrac.ImeNadimak} je PRVI završio anagram! Bonus: +{bonus} bodova");
+                                }
+
                                 if (igrac.UlozenKvisko)
                                 {
+                                    int kviskoBonus = points; // KVISKO BONUS = originalni poeni
                                     points *= 2;
+                                    kviskoPoeniPoIgracima[playerId] += kviskoBonus; // DODAJ KVISKO BODOVE!
                                     igrac.UlozenKvisko = false;
-                                    writer.WriteLine(" Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                    writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                    Console.WriteLine($"💎 {igrac.ImeNadimak} - KVISKO bonus: +{kviskoBonus} bodova!");
                                 }
+
                                 ukupniPoeni += points;
                                 ukupniPoeniPoIgracima[playerId] = ukupniPoeni;
                                 writer.WriteLine($"Tačno! Osvojili ste {points} poena.");
                                 writer.WriteLine(points);
 
-                                Console.WriteLine($" {igrac.ImeNadimak} - ANAGRAM: +{points} bodova (ukupno: {ukupniPoeni})");
+                                Console.WriteLine($"✅ {igrac.ImeNadimak} - ANAGRAM: +{points} bodova (ukupno: {ukupniPoeni})");
                             }
                             else
                             {
@@ -226,9 +271,12 @@ namespace Server
 
                         if (igrac.UlozenKvisko)
                         {
+                            int kviskoBonus = poeniPitanja; // KVISKO BONUS = originalni poeni
                             poeniPitanja *= 2;
-                            writer.WriteLine("Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                            kviskoPoeniPoIgracima[playerId] += kviskoBonus; // DODAJ KVISKO BODOVE!
+                            writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
                             igrac.UlozenKvisko = false;
+                            Console.WriteLine($"💎 {igrac.ImeNadimak} - KVISKO bonus: +{kviskoBonus} bodova!");
                         }
 
                         ukupniPoeni += poeniPitanja;
@@ -236,10 +284,10 @@ namespace Server
                         writer.WriteLine($"Ukupno poena iz pitanja: {poeniPitanja}");
                         writer.WriteLine($"Vaši ukupni poeni: {ukupniPoeni}");
 
-                        Console.WriteLine($" {igrac.ImeNadimak} - PITANJA: +{poeniPitanja} bodova (ukupno: {ukupniPoeni})");
+                        Console.WriteLine($"📝 {igrac.ImeNadimak} - PITANJA: +{poeniPitanja} bodova (ukupno: {ukupniPoeni})");
                     }
 
-                    // Asocijacije
+                    // Asocijacije - SVAKI IGRAČ IMA SVOJU, ALI GLOBALNI ZAVRŠETAK
                     if (igreZaIgraca.Contains("as"))
                     {
                         igrac.UlozenKvisko = false;
@@ -254,16 +302,73 @@ namespace Server
                             }
                         }
 
-                        Asocijacije asocijacije = new Asocijacije();
+                        Asocijacije asocijacije = new Asocijacije(); // Svaki igrač ima svoju!
                         int poeniPre = ukupniPoeni;
 
                         while (true)
                         {
+                            // Proveri da li je igra završena zbog grešaka ili rešenja
+                            lock (lockObject)
+                            {
+                                if (asocijacijaZavrsenaDueToErrors)
+                                {
+                                    int poeni = asocijacije.UkupniBodovi;
+                                    if (igrac.UlozenKvisko && poeni > 0)
+                                    {
+                                        int kviskoBonus = poeni; // KVISKO BONUS = originalni poeni
+                                        poeni *= 2;
+                                        kviskoPoeniPoIgracima[playerId] += kviskoBonus; // DODAJ KVISKO BODOVE!
+                                        writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                        Console.WriteLine($"💎 {igrac.ImeNadimak} - KVISKO bonus: +{kviskoBonus} bodova!");
+                                    }
+                                    igrac.UlozenKvisko = false;
+                                    ukupniPoeni = poeniPre + poeni;
+                                    ukupniPoeniPoIgracima[playerId] = ukupniPoeni;
+                                    writer.WriteLine("🔗 Asocijacija je završena zbog previše grešaka za konačno rešenje!");
+                                    writer.WriteLine($"Poeni iz asocijacija: {poeni}");
+                                    writer.WriteLine($"Vaši ukupni poeni: {ukupniPoeni}");
+                                    writer.WriteLine("END");
+
+                                    Console.WriteLine($"🔗 {igrac.ImeNadimak} - ASOCIJACIJE: +{poeni} bodova (ukupno: {ukupniPoeni})");
+                                    break;
+                                }
+
+                                // NOVA PROVERA - da li je neko pogodio konačno rešenje
+                                if (asocijacijaZavrsenaDueToSolution)
+                                {
+                                    int poeni = asocijacije.UkupniBodovi;
+                                    if (igrac.UlozenKvisko && poeni > 0)
+                                    {
+                                        int kviskoBonus = poeni; // KVISKO BONUS = originalni poeni
+                                        poeni *= 2;
+                                        kviskoPoeniPoIgracima[playerId] += kviskoBonus; // DODAJ KVISKO BODOVE!
+                                        writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                        Console.WriteLine($"💎 {igrac.ImeNadimak} - KVISKO bonus: +{kviskoBonus} bodova!");
+                                    }
+                                    igrac.UlozenKvisko = false;
+                                    ukupniPoeni = poeniPre + poeni;
+                                    ukupniPoeniPoIgracima[playerId] = ukupniPoeni;
+                                    writer.WriteLine($"🎉 {pobednikAsocijacija} je pogodio konačno rešenje! Igra je završena!");
+                                    writer.WriteLine($"Poeni iz asocijacija: {poeni}");
+                                    writer.WriteLine($"Vaši ukupni poeni: {ukupniPoeni}");
+                                    writer.WriteLine("END");
+
+                                    Console.WriteLine($"🔗 {igrac.ImeNadimak} - ASOCIJACIJE: +{poeni} bodova (ukupno: {ukupniPoeni})");
+                                    break;
+                                }
+                            }
+
                             // Slanje trenutnog stanja
                             foreach (var linija in asocijacije.PrikaziAsocijaciju().Split('\n'))
                             {
                                 if (!string.IsNullOrWhiteSpace(linija))
                                     writer.WriteLine(linija.Trim());
+                            }
+
+                            // Prikaži broj grešaka
+                            lock (lockObject)
+                            {
+                                writer.WriteLine($"⚠️  Ukupno grešaka za konačno rešenje: {brojGreskaKonacnoResenje}/{maxGresaka}");
                             }
                             writer.WriteLine("END");
 
@@ -271,10 +376,13 @@ namespace Server
                             if (string.IsNullOrEmpty(unos) || unos.ToLower() == "izlaz")
                             {
                                 int poeni = asocijacije.UkupniBodovi;
-                                if (igrac.UlozenKvisko)
+                                if (igrac.UlozenKvisko && poeni > 0)
                                 {
+                                    int kviskoBonus = poeni; // KVISKO BONUS = originalni poeni
                                     poeni *= 2;
+                                    kviskoPoeniPoIgracima[playerId] += kviskoBonus; // DODAJ KVISKO BODOVE!
                                     writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                    Console.WriteLine($"💎 {igrac.ImeNadimak} - KVISKO bonus: +{kviskoBonus} bodova!");
                                 }
                                 igrac.UlozenKvisko = false;
                                 ukupniPoeni = poeniPre + poeni;
@@ -284,16 +392,47 @@ namespace Server
                                 writer.WriteLine($"Vaši ukupni poeni: {ukupniPoeni}");
                                 writer.WriteLine("END");
 
-                                Console.WriteLine($" {igrac.ImeNadimak} - ASOCIJACIJE: +{poeni} bodova (ukupno: {ukupniPoeni})");
+                                Console.WriteLine($"🔗 {igrac.ImeNadimak} - ASOCIJACIJE: +{poeni} bodova (ukupno: {ukupniPoeni})");
                                 break;
                             }
 
                             var (poruka, bodovi) = asocijacije.OtvoriPolje(unos);
+
+                            // Proveri da li je pokušaj konačnog rešenja
+                            if (unos.StartsWith("K:"))
+                            {
+                                if (poruka.Contains("Tačno"))
+                                {
+                                    // NEKO JE POGODIO KONAČNO REŠENJE - ZAVRŠI ZA SVE!
+                                    lock (lockObject)
+                                    {
+                                        asocijacijaZavrsenaDueToSolution = true;
+                                        pobednikAsocijacija = igrac.ImeNadimak;
+                                    }
+                                    Console.WriteLine($"🎉 {igrac.ImeNadimak} je pogodio konačno rešenje asocijacije! Igra završena za sve!");
+                                }
+                                else
+                                {
+                                    // Greška za konačno rešenje
+                                    lock (lockObject)
+                                    {
+                                        brojGreskaKonacnoResenje++;
+                                        Console.WriteLine($"❌ {igrac.ImeNadimak} - pogrešno konačno rešenje! Greška {brojGreskaKonacnoResenje}/{maxGresaka}");
+
+                                        if (brojGreskaKonacnoResenje >= maxGresaka)
+                                        {
+                                            asocijacijaZavrsenaDueToErrors = true;
+                                            Console.WriteLine("🔗 Asocijacije završene zbog previše grešaka za konačno rešenje!");
+                                        }
+                                    }
+                                }
+                            }
+
                             writer.WriteLine(poruka);
                             if (bodovi > 0)
                             {
-                                writer.WriteLine($" Bodovi iz asocijacija: {asocijacije.UkupniBodovi}");
-                                writer.WriteLine($" Vaši ukupni poeni: {poeniPre + asocijacije.UkupniBodovi}");
+                                writer.WriteLine($"💰 Bodovi iz asocijacija: {asocijacije.UkupniBodovi}");
+                                writer.WriteLine($"💰 Vaši ukupni poeni: {poeniPre + asocijacije.UkupniBodovi}");
                             }
                             writer.WriteLine("END");
 
@@ -303,27 +442,42 @@ namespace Server
                                 int poeni = asocijacije.UkupniBodovi;
                                 if (igrac.UlozenKvisko)
                                 {
+                                    int kviskoBonus = poeni; // KVISKO BONUS = originalni poeni
                                     poeni *= 2;
-                                    writer.WriteLine(" Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                    kviskoPoeniPoIgracima[playerId] += kviskoBonus; // DODAJ KVISKO BODOVE!
+                                    writer.WriteLine("✅ Uložili ste KVISKA - osvojeni poeni su DUPLIRANI!");
+                                    Console.WriteLine($"💎 {igrac.ImeNadimak} - KVISKO bonus: +{kviskoBonus} bodova!");
                                 }
                                 igrac.UlozenKvisko = false;
                                 ukupniPoeni = poeniPre + poeni;
                                 ukupniPoeniPoIgracima[playerId] = ukupniPoeni;
-                                writer.WriteLine(" Čestitamo! Rešili ste celu asocijaciju!");
-                                writer.WriteLine($" Poeni iz asocijacija: {poeni}");
-                                writer.WriteLine($" FINALNI REZULTAT: {ukupniPoeni} UKUPNIH BODOVA! ");
+                                writer.WriteLine("🎉 Čestitamo! Rešili ste celu asocijaciju!");
+                                writer.WriteLine($"📊 Poeni iz asocijacija: {poeni}");
+                                writer.WriteLine($"🎯 FINALNI REZULTAT: {ukupniPoeni} UKUPNIH BODOVA! 🎯");
                                 writer.WriteLine("END");
 
-                                Console.WriteLine($" {igrac.ImeNadimak} - ASOCIJACIJE: +{poeni} bodova (ukupno: {ukupniPoeni})");
+                                Console.WriteLine($"🔗 {igrac.ImeNadimak} - ASOCIJACIJE ZAVRŠENE: +{poeni} bodova (ukupno: {ukupniPoeni})");
                                 break;
                             }
                         }
                     }
 
-                    writer.WriteLine($"\n FINALNI REZULTAT ZA {igrac.ImeNadimak.ToUpper()}: {ukupniPoeniPoIgracima[playerId]} UKUPNIH BODOVA! ");
+                    writer.WriteLine($"\n🎯 FINALNI REZULTAT ZA {igrac.ImeNadimak.ToUpper()}: {ukupniPoeniPoIgracima[playerId]} UKUPNIH BODOVA! 🎯");
 
                     // Prikaži sve igrače posle završetka
                     PrikaziSveIgrace();
+
+                    // Proveri da li su svi završili
+                    lock (lockObject)
+                    {
+                        zavrseniIgraci++;
+                        Console.WriteLine($"🏁 {igrac.ImeNadimak} je završio igru! ({zavrseniIgraci}/{ukupanBrojIgraca})");
+
+                        if (zavrseniIgraci == ukupanBrojIgraca && ukupanBrojIgraca >= 2)
+                        {
+                            ProglasiPobednika();
+                        }
+                    }
                 }
                 else
                 {
@@ -351,9 +505,78 @@ namespace Server
             foreach (var igrac in ukupniPoeniPoIgracima.OrderByDescending(x => x.Value))
             {
                 string ime = igraci.ContainsKey(igrac.Key) ? igraci[igrac.Key].ImeNadimak : $"Igrac {igrac.Key}";
-                Console.WriteLine($"{ime}: {igrac.Value} bodova");
+                int kviskoPoeni = kviskoPoeniPoIgracima.ContainsKey(igrac.Key) ? kviskoPoeniPoIgracima[igrac.Key] : 0;
+                Console.WriteLine($"{ime}: {igrac.Value} bodova (KVISKO: {kviskoPoeni})");
             }
             Console.WriteLine("==========================\n");
+        }
+
+        private static void ProglasiPobednika()
+        {
+            Console.WriteLine("\n" + new string('=', 50));
+            Console.WriteLine("🏆 SVI IGRAČI SU ZAVRŠILI - FINALNI REZULTATI! 🏆");
+            Console.WriteLine(new string('=', 50));
+
+            var sortiraniIgraci = ukupniPoeniPoIgracima.OrderByDescending(x => x.Value).ToList();
+
+            if (sortiraniIgraci.Count >= 2)
+            {
+                var pobednik = sortiraniIgraci[0];
+                var drugiMesto = sortiraniIgraci[1];
+
+                string imePobednika = igraci.ContainsKey(pobednik.Key) ? igraci[pobednik.Key].ImeNadimak : $"Igrac {pobednik.Key}";
+                string imeDrugog = igraci.ContainsKey(drugiMesto.Key) ? igraci[drugiMesto.Key].ImeNadimak : $"Igrac {drugiMesto.Key}";
+
+                int razlika = pobednik.Value - drugiMesto.Value;
+
+                if (razlika == 0)
+                {
+                    // NEREŠENO - PROVERI KVISKO BODOVE!
+                    int kviskoPoeniPobednik = kviskoPoeniPoIgracima.ContainsKey(pobednik.Key) ? kviskoPoeniPoIgracima[pobednik.Key] : 0;
+                    int kviskoPoeniDrugi = kviskoPoeniPoIgracima.ContainsKey(drugiMesto.Key) ? kviskoPoeniPoIgracima[drugiMesto.Key] : 0;
+
+                    Console.WriteLine($"🤝 NEREŠENO! Oba igrača imaju {pobednik.Value} bodova!");
+                    Console.WriteLine($"💎 KVISKO TIEBREAKER:");
+                    Console.WriteLine($"   {imePobednika}: {kviskoPoeniPobednik} KVISKO bodova");
+                    Console.WriteLine($"   {imeDrugog}: {kviskoPoeniDrugi} KVISKO bodova");
+
+                    if (kviskoPoeniPobednik > kviskoPoeniDrugi)
+                    {
+                        Console.WriteLine($"🥇 POBEDNIK (KVISKO): {imePobednika} sa {kviskoPoeniPobednik} KVISKO bodova!");
+                        Console.WriteLine($"🥈 DRUGO MESTO: {imeDrugog} sa {kviskoPoeniDrugi} KVISKO bodova!");
+                    }
+                    else if (kviskoPoeniDrugi > kviskoPoeniPobednik)
+                    {
+                        Console.WriteLine($"🥇 POBEDNIK (KVISKO): {imeDrugog} sa {kviskoPoeniDrugi} KVISKO bodova!");
+                        Console.WriteLine($"🥈 DRUGO MESTO: {imePobednika} sa {kviskoPoeniPobednik} KVISKO bodova!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("🤝 POTPUNO NEREŠENO! Isti broj bodova I KVISKO bodova!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"🥇 POBEDNIK: {imePobednika} sa {pobednik.Value} bodova!");
+                    Console.WriteLine($"🥈 DRUGO MESTO: {imeDrugog} sa {drugiMesto.Value} bodova!");
+                    Console.WriteLine($"📊 Razlika: {razlika} bodova");
+                }
+
+                // Prikaži kompletnu tabelu
+                Console.WriteLine("\n📋 KOMPLETNA TABELA:");
+                for (int i = 0; i < sortiraniIgraci.Count; i++)
+                {
+                    var igrac = sortiraniIgraci[i];
+                    string ime = igraci.ContainsKey(igrac.Key) ? igraci[igrac.Key].ImeNadimak : $"Igrac {igrac.Key}";
+                    int kviskoPoeni = kviskoPoeniPoIgracima.ContainsKey(igrac.Key) ? kviskoPoeniPoIgracima[igrac.Key] : 0;
+                    string medal = i == 0 ? "🥇" : i == 1 ? "🥈" : "🥉";
+                    Console.WriteLine($"{medal} {i + 1}. {ime}: {igrac.Value} bodova (KVISKO: {kviskoPoeni})");
+                }
+            }
+
+            Console.WriteLine(new string('=', 50));
+            Console.WriteLine("🎉 HVALA SVIMA NA IGRANJU! 🎉");
+            Console.WriteLine(new string('=', 50) + "\n");
         }
 
         private static string GetLocalIpAddress()
